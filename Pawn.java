@@ -9,23 +9,20 @@ import java.util.*;
 
 public class Pawn {
   //Attributes
-  private int x;
-  private int y;
+  private Vector position;
   private boolean isOnSafeZone;
 
   //Constructor
   public Pawn()
   {
-    this.x = -1;
-    this.y = -1;
+    this.position = new Vector(-1,-1);
+    this.isOnSafeZone = true;
   }
 
   //Methods
-  public void movePawn(int x,int y)
+  public void movePawn(Vector newPos)
   {
-    this.x += x;
-    this.y += y;
-    this.isOnSafeZone = true;
+    position = newPos;
     updateSafeZone();
   }
 
@@ -40,7 +37,7 @@ public class Pawn {
 
   private void updateSafeZone()
   {
-    
+
   }
 
 
