@@ -13,6 +13,7 @@ public class Player {
   private Color color;
   private Random rand;
   private int pawnsHome;
+  private List<Pawn> pawns = new ArrayList<Pawn>(4);
 
   //Constructor
   public Player(String n,Color c)
