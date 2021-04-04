@@ -17,15 +17,22 @@ public class Player {
   private Map<Integer,Vector> arrayPosition = new HashMap<Integer,Vector>();
 
   //Constructor
-  public Player(String n,Color c)
+  public Player(String n)
   {
     this.pawnsHome = 0;
     this.name = n;
-    this.color = c;
+    this.color = null;
     this.rand = new Random();
   }
 
   //Methods
+  public Color getColor() {return this.color;}
+  /***************************************************/
+
+  public void setColor(Color c) {this.color = c;}
+
+  /***************************************************/
+
   public int rollDice()
   {
     int n = 0;
@@ -35,7 +42,17 @@ public class Player {
 
   /***************************************************/
 
-  private void initialiseArrayVector()
+  public void movePawn(int pawn)
+  {
+    //A coder avec interface graphique
+    //Après avoir lancer le dé
+    //On regarde sur quel pion le joueur click (action listener...)
+    //getOut,moveOnBoard methods
+  }
+
+  /***************************************************/
+
+  private void initializePositionMapping()
   {
   	arrayPosition.put(0,new Vector (6, 1));
     arrayPosition.put(1,new Vector (6, 2));
@@ -95,13 +112,5 @@ public class Player {
   	arrayPosition.put(55,new Vector (7, 5));
   	arrayPosition.put(56,new Vector (7, 6));
 }
-
-//Test
-public static void main (String [] arg)
-{
-  Player p = new Player("jean",Color.BLEU);
-  p.initialiseArrayVector();
-}
-
 
 }

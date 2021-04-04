@@ -11,6 +11,7 @@ public class Pawn {
   //Attributes
   private Vector position;
   private boolean isOnSafeZone;
+  private boolean formBlock;
   private int square;
 
   //Constructor
@@ -19,10 +20,19 @@ public class Pawn {
     this.square = -1;
     this.position = new Vector(-1,-1);
     this.isOnSafeZone = true;
+    this.formBlock = false;
   }
 
   //Methods
-  public void movePawn(Map<Integer,Vector> coords,int resultDice)
+  public void getOut()
+  {
+    this.square = 0;
+    this.position = new Vector(6,1);
+  }
+
+  /***************************************************/
+
+  public void moveOnBoard(Map<Integer,Vector> coords,int resultDice)
   {
 
 	 if (resultDice == 6 && square < 51) {this.position = coords.get(square+=6);}
@@ -52,7 +62,7 @@ public class Pawn {
 
   private void updateSafeZone()
   {
-    if(square = 0 || square =  || square = 21 || square = 34 || square = 47 || square >= 51 ) isOnSafeZone = true;
+    if(square == 0 || square ==  8 || square == 21 || square == 34 || square == 47 || square >= 51 ) isOnSafeZone = true;
     else isOnSafeZone = false;
   }
 
