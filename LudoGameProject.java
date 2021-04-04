@@ -7,13 +7,12 @@
 import java.lang.*;
 import java.util.*;
 
-public class Main {
+public class LudoGameProject {
 
   public static void main(String [] args)
   {
     GameBoard game = new GameBoard();
-
-
+    game.runGame();
 
 	}
 
