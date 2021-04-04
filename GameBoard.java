@@ -29,7 +29,7 @@ public class GameBoard {
     //Letting each player roll the dice once
     for (int i = 0;i<4;++i)
     {
-      int tmp = players.get(i).rollDice();
+      int tmp = players.get(i).rollDice(); //Il faudrait ajouter une méthode pour que le joueur click sur le dé
       if(tmp > max)
       {
         index = i;
