@@ -24,7 +24,7 @@ public class GameBoard {
   //Methods
   private int whoStarts()
   {
-    int max = 0, index = 0;
+    int max = 0;
     List<Player> rolledSame = new ArrayList<Player>();
     int iPlayFirst = -1;
 
@@ -34,7 +34,6 @@ public class GameBoard {
       int tmp = players.get(i).rollDice(); //Il faudrait ajouter une méthode pour que le joueur click sur le dé
       if(tmp > max)
       {
-        index = i;
         max = tmp;
         rolledSame.clear();
         rolledSame.add(players.get(i));
