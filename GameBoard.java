@@ -10,12 +10,14 @@ import java.util.*;
 public class GameBoard {
   //Attributes
   private List<Player> players;
-  private Random rand;
+  private Random randPlayer;
+  private Random randColor;
 
   //Constructor
   public GameBoard()
   {
-    rand = new Random();
+    randPlayer = new Random();
+    randColor = new Random();
     players = new ArrayList<Player>(4);
   }
 
@@ -36,27 +38,29 @@ public class GameBoard {
         max = tmp;
         rolledSame.clear();
         rolledSame.add(players.get(i));
+        iPlayFirst = i;
       }
       else if (tmp == max) {rolledSame.add(players.get(i));}
     }
 
     //Looping if several players rolled the same number
-    while(rolledSame.size() > 1)
+    boolean same = true;
+    while(!same)
     {
       max = 0;
-      for(Player p : rolledSame)
+      if(rolledSame.size()>1)
       {
-        int tmp = p.rollDice();
-        if(tmp >= max)
+        for(Player p : rolledSame)
         {
-          max = tmp;
-          iPlayFirst = players.indexOf(p);
+          int tmp = p.rollDice();
+          if(tmp >= max)
+          {
+            max = tmp;
+            iPlayFirst = players.indexOf(p);
+          }
+          else {rolledSame.remove(p);}
         }
-        else
-        {
-          rolledSame.remove(p);
-        }
-      }
+      } else same = true;
     }
 
     return iPlayFirst;
@@ -66,19 +70,25 @@ public class GameBoard {
 
   public void assignPawnsColor()
   {
-    Set<Integer> colorArray = new HashSet<Integer>();
+    Set<Integer> colorsSet = new HashSet<Integer>(4);
+    Set<Integer> playerSet = new HashSet<Integer>(4);
     Color [] arr = Color.values();
-    Player p = players.get(0);
-    while(colorArray.size() != 4)
-    {
-      int n = this.rand.nextInt(4);
-      if(!colorArray.contains(n))
-      {
-         this.players.get(n).setColor(arr[n]);
-         colorArray.add(n);
-       }
-    }
+    boolean dispensed = false;
 
+    while(!dispensed)
+    {
+      if(colorsSet.size() != 4)
+      {
+          int c = this.randColor.nextInt(4);
+          int p = this.randPlayer.nextInt(4);
+          if(!colorsSet.contains(c) && !playerSet.contains(p))
+          {
+            this.players.get(p).setColor(arr[c]);
+            colorsSet.add(c);
+            playerSet.add(p);
+         }
+      } else dispensed = true;
+    }
   }
 
   /***************************************************/
@@ -90,8 +100,19 @@ public class GameBoard {
 
   /***************************************************/
 
+  private void setUpPlayers()
+  {
+    this.players.add(new Player("jean"));
+    this.players.add(new Player("david"));
+    this.players.add(new Player("lucien"));
+    this.players.add(new Player("paul"));
+  }
+
+  /***************************************************/
+
   private void setUpGame()
   {
+    setUpPlayers();
     //Set up graphical interface
   }
 
@@ -102,9 +123,11 @@ public class GameBoard {
     setUpGame();
 
     assignPawnsColor();
+    //for(Player p : this.players) System.out.println(p.getColor());
     int playerIndex = whoStarts();
+    System.out.println(playerIndex);
 
-    //Let players roll dice : movePawn method
+    //Let players roll dice : movePawn method...
 
   }
 
@@ -116,7 +139,7 @@ public class GameBoard {
 
 
   //Tests
-  public static void main (String [] arg)
+  /*public static void main (String [] arg)
   {
     GameBoard g = new GameBoard();
     g.getPlayers().add(new Player("jean"));
@@ -125,7 +148,7 @@ public class GameBoard {
     g.getPlayers().add(new Player("paul"));
     g.assignPawnsColor();
     for(Player p : g.getPlayers()) System.out.println(p.getColor());
-  }
+  }*/
 
 
 }
