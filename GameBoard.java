@@ -38,7 +38,7 @@ public class GameBoard {
         max = tmp;
         rolledSame.clear();
         rolledSame.add(players.get(i));
-        iPlayFirst = i;
+        iPlayFirst = i; //Assign the player's index who rolled the current max
       }
       else if (tmp == max) {rolledSame.add(players.get(i));}
     }
@@ -125,7 +125,7 @@ public class GameBoard {
     assignPawnsColor();
     //for(Player p : this.players) System.out.println(p.getColor());
     int playerIndex = whoStarts();
-    System.out.println(playerIndex);
+    //System.out.println(playerIndex);
 
     //Let players roll dice : movePawn method...
 
