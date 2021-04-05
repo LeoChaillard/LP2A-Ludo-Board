@@ -33,6 +33,17 @@ public class Player {
 
   /***************************************************/
 
+  public void play()
+  {
+    rollDice();//A remplacer par méthode où joueur click sur dé
+
+    //Ajouter condition : si le joueur a le droit de bouger un pion
+    int pawnIndex = -1;
+    movePawn(pawnIndex);
+
+  }
+  /***************************************************/
+
   public int rollDice()
   {
     int n = 0;
@@ -42,7 +53,7 @@ public class Player {
 
   /***************************************************/
 
-  public void movePawn(int pawn)
+  public void movePawn(int pawnIndex)
   {
     //A coder avec interface graphique
     //Après avoir lancer le dé
