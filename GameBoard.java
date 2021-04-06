@@ -19,6 +19,7 @@ public class GameBoard {
     randPlayer = new Random();
     randColor = new Random();
     players = new ArrayList<Player>(4);
+    setUpGame();
   }
 
   //Methods
@@ -119,8 +120,6 @@ public class GameBoard {
 
   public void runGame()
   {
-    setUpGame();
-
     assignPawnsColor();
     //for(Player p : this.players) System.out.println(p.getColor());
     int playerIndex = whoStarts();
