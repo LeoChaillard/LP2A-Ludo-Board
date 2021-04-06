@@ -44,7 +44,7 @@ public class GameBoard {
 
     //Looping if several players rolled the same number
     boolean same = true;
-    while(!same)
+    while(same)
     {
       max = 0;
       if(rolledSame.size()>1)
@@ -59,7 +59,7 @@ public class GameBoard {
           }
           else {rolledSame.remove(p);}
         }
-      } else same = true;
+      } else same = false;
     }
 
     return iPlayFirst;
