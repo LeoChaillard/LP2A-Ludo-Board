@@ -11,9 +11,8 @@ public class LudoGameProject {
 
   public static void main(String [] args)
   {
-    GameBoard game = new GameBoard();
+    Game game = new Game();
     game.runGame();
-
 	}
 
 }

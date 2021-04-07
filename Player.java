@@ -7,6 +7,7 @@
 import java.lang.*;
 import java.util.*;
 
+
 public class Player {
   //Attributes
   private String name;
@@ -23,10 +24,19 @@ public class Player {
     this.name = n;
     this.color = null;
     this.rand = new Random();
+    pawns.add(new Pawn());
+    pawns.add(new Pawn());
+    pawns.add(new Pawn());
+    pawns.add(new Pawn());
   }
 
   //Methods
+  public List<Pawn> getPawns(){return this.pawns;}
+  
+  /***************************************************/
+
   public Color getColor() {return this.color;}
+
   /***************************************************/
 
   public void setColor(Color c) {this.color = c;}

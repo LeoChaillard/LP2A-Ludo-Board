@@ -6,6 +6,9 @@
 
 import java.lang.*;
 import java.util.*;
+import javax.swing.ImageIcon;
+import java.awt.Image;
+import javax.swing.JLabel;
 
 public class Pawn {
   //Attributes
@@ -13,6 +16,7 @@ public class Pawn {
   private boolean isOnSafeZone;
   private boolean formBlock;
   private int square;
+  private ImageIcon pawnImage;
 
   //Constructor
   public Pawn()
@@ -66,6 +70,23 @@ public class Pawn {
     else isOnSafeZone = false;
   }
 
+  /***************************************************/
+
+  private Image scaleImage(Image image,int w, int h)
+  {
+    Image scaled = image.getScaledInstance(w,h,Image.SCALE_SMOOTH);
+    return scaled;
+  }
+
+  /***************************************************/
+
+  public JLabel setAndScaleImage(String pawnPath)
+  {
+    this.pawnImage = new ImageIcon(pawnPath);
+    Image scaledPawn = scaleImage(pawnImage.getImage(),200,200);
+    JLabel pawn = new JLabel(new ImageIcon(scaledPawn));
+    return pawn;
+  }
 
 
 
