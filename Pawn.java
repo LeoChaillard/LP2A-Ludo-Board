@@ -30,9 +30,9 @@ public class Pawn {
   }
 
   //Methods
-  public void getSquare(){return this.square };
+  public int getSquare(){return this.square };
   
-  public void getHome(){return this.home};
+  public boolean getHome(){return this.home};
 
   public void getOut()
   {

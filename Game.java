@@ -14,6 +14,7 @@ public class Game {
   private Random randPlayer;
   private Random randColor;
   private GameWindow window;
+  private boolean running;
 
   //Constructor
   public Game()
@@ -22,6 +23,7 @@ public class Game {
     randColor = new Random();
     players = new ArrayList<Player>(4);
     window = new GameWindow();
+    running = false;
   }
 
   //Methods
@@ -34,7 +36,7 @@ public class Game {
     //Letting each player roll the dice once
     for (int i = 0;i<4;++i)
     {
-      int tmp = players.get(i).rollDice(); //Il faudrait ajouter une méthode pour que le joueur click sur le dé
+      int tmp = players.get(i).rollDice();
       if(tmp > max)
       {
         max = tmp;
@@ -95,13 +97,6 @@ public class Game {
 
   /***************************************************/
 
-  private void resetGame()
-  {
-
-  }
-
-  /***************************************************/
-
   private void setUpPlayers()
   {
     this.players.add(new Player("Joueur1"));
@@ -115,10 +110,11 @@ public class Game {
   private void setUpGame()
   {
     setUpPlayers();
-
+    assignPawnsColor();
     //Set up graphical interface
-
     this.window.initWindow();
+    this.window.draw();
+    this.running = true;
   }
 
   /***************************************************/
@@ -126,16 +122,26 @@ public class Game {
   public void runGame()
   {
     setUpGame();
-    this.window.draw();
 
-    assignPawnsColor();
     int playerIndex = whoStarts();
 
-    //Let players roll dice : movePawn method...
+    while(running)
+    {
+      this.players.get(playerIndex).play();
+      if(this.players.get(playerIndex).checkWin()) running = false;
 
+      //Mettre à jour indice du Joueur
+
+
+      running = false; //En attendant pour eviter boucle infini
+    }
   }
 
+  /***************************************************/
 
+  private void resetGame()
+  {
 
+  }
 
 }
