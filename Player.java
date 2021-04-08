@@ -41,6 +41,12 @@ public class Player {
 
   public void setColor(Color c) {this.color = c;}
 
+  /***************************************************/
+
+  private boolean checkWin()
+  {
+    return false;
+  }
 
   /***************************************************/
 
@@ -114,6 +120,19 @@ public class Player {
 	  }
 
   }
+
+  public boolean chekBlocPawn(int pawnIndex){
+    for(int i = 0; i<4; i++){
+      if(pawns.get(pawnIndex).getSquare() == pawns.get(i).getSquare() && pawnIndex != i ){
+        return true;
+      }
+      else{
+        return false;
+      }
+    }
+    
+  }
+
 
   private void initializePositionMapping()
   {
