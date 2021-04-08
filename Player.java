@@ -32,7 +32,7 @@ public class Player {
 
   //Methods
   public List<Pawn> getPawns(){return this.pawns;}
-  
+
   /***************************************************/
 
   public Color getColor() {return this.color;}
@@ -43,13 +43,30 @@ public class Player {
 
   /***************************************************/
 
+  public boolean checkWin()
+  {
+    return false;
+  }
+
+  /***************************************************/
+
+  public int pawnStatus()
+  {
+    return -1;
+  }
+
+  /***************************************************/
+
   public void play()
   {
-    rollDice();//A remplacer par méthode où joueur click sur dé
+    int diceResult = rollDice();
 
-    //Ajouter condition : si le joueur a le droit de bouger un pion
-    int pawnIndex = -1;
-    movePawn(pawnIndex);
+    //Vérifier si c'est possible
+    //Si possible alors appeler les 2 méthodes
+    int pawnIndex = pawnStatus();
+    movePawn(pawnIndex, diceResult);
+
+    //Sinon ne rien faire et passe au joueur suivant
 
   }
   /***************************************************/
@@ -63,12 +80,14 @@ public class Player {
 
   /***************************************************/
 
-  public void movePawn(int pawnIndex)
+  public void movePawn(int pawnIndex, int diceResult)
   {
-    //A coder avec interface graphique
-    //Après avoir lancer le dé
-    //On regarde sur quel pion le joueur click (action listener...)
-    //getOut,moveOnBoard methods
+    if(diceResult == 6 && this.pawns.get(pawnIndex).getSquare() == -1) this.pawns.get(pawnIndex).getOut();
+    else if (this.pawns.get(pawnIndex).canMove(diceResult))
+    {
+      this.pawns.get(pawnIndex).moveOnBoard(arrayPosition,diceResult);
+      //Checker si un pion se fait bouffer
+    }
   }
 
   /***************************************************/

@@ -28,6 +28,10 @@ public class Pawn {
   }
 
   //Methods
+  public int getSquare(){return this.square;}
+
+  /***************************************************/
+
   public void getOut()
   {
     this.square = 0;
@@ -36,24 +40,26 @@ public class Pawn {
 
   /***************************************************/
 
-  public void moveOnBoard(Map<Integer,Vector> coords,int resultDice)
+  public boolean canMove(int resultDice)
   {
+   if ( (resultDice == 6 && this.square < 51)
+ 	 || (resultDice == 5 && this.square < 52)
+ 	 || (resultDice == 4 && this.square < 53)
+ 	 || (resultDice == 3 && this.square < 54)
+ 	 || (resultDice == 2 && this.square < 55)
+ 	 || (resultDice == 1 && this.square < 56) ) return true;
 
-	 if (resultDice == 6 && square < 51) {this.position = coords.get(square+=6);}
+   return false;
 
-	 else if (resultDice == 5 && square < 52) {this.position = coords.get(square+=5);}
-
-	 else if (resultDice == 4 && square < 53) {this.position = coords.get(square+=4);}
-
-	 else if (resultDice == 3 && square < 54) {this.position = coords.get(square+=3);}
-
-	 else if (resultDice == 2 && square < 55) {this.position = coords.get(square+=2);}
-
-	 else if (resultDice == 1 && square < 56) {this.position = coords.get(square+=1);}
-
-   updateSafeZone();
   }
 
+  /***************************************************/
+
+  public void moveOnBoard(Map<Integer,Vector> coords,int diceResult)
+  {
+	 this.position = coords.get(square+=diceResult);
+   updateSafeZone();
+  }
 
   /***************************************************/
 
@@ -69,25 +75,5 @@ public class Pawn {
     if(square == 0 || square ==  8 || square == 21 || square == 34 || square == 47 || square >= 51 ) isOnSafeZone = true;
     else isOnSafeZone = false;
   }
-
-  /***************************************************/
-
-  private Image scaleImage(Image image,int w, int h)
-  {
-    Image scaled = image.getScaledInstance(w,h,Image.SCALE_SMOOTH);
-    return scaled;
-  }
-
-  /***************************************************/
-
-  public JLabel setAndScaleImage(String pawnPath)
-  {
-    this.pawnImage = new ImageIcon(pawnPath);
-    Image scaledPawn = scaleImage(pawnImage.getImage(),200,200);
-    JLabel pawn = new JLabel(new ImageIcon(scaledPawn));
-    return pawn;
-  }
-
-
 
 }
