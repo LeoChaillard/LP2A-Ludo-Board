@@ -43,7 +43,7 @@ public class Player {
 
   /***************************************************/
 
-  private boolean checkWin()
+  public boolean checkWin()
   {
     return false;
   }
@@ -72,7 +72,7 @@ public class Player {
   }
   /***************************************************/
 
-  private int rollDice()
+  public int rollDice()
   {
     int n = 0;
     while( n <= 0) n = this.rand.nextInt(7);
