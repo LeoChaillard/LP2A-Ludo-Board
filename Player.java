@@ -43,20 +43,20 @@ public class Player {
 
   /***************************************************/
 
-  public boolean checkWin()
+  private boolean checkWin()
   {
     return false;
   }
 
   /***************************************************/
 
-  public void pawnStatus(int pawnIndex,int diceResult)
+  public void pawnStatus(int diceResult)
   {
     /*int askIndex = -1;
     do {
 
 
-    } while (!movePawn(pawnIndex,diceResult));*/
+    } while (!movePawn(askIndex,diceResult));*/
   }
 
   /***************************************************/
@@ -67,12 +67,12 @@ public class Player {
 
     //Vérifier si c'est possible
     //Si possible alors appeler pawnStatus
-    pawnStatus(pawnIndex,diceResult);
+    pawnStatus(diceResult);
 
   }
   /***************************************************/
 
-  public int rollDice()
+  private int rollDice()
   {
     int n = 0;
     while( n <= 0) n = this.rand.nextInt(7);
@@ -81,7 +81,7 @@ public class Player {
 
   /***************************************************/
 
-  public boolean movePawn(int pawnIndex, int diceResult)
+  private boolean movePawn(int pawnIndex, int diceResult)
   {
     if(diceResult == 6 && this.pawns.get(pawnIndex).getSquare() == -1)
     {
