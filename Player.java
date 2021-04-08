@@ -50,9 +50,13 @@ public class Player {
 
   /***************************************************/
 
-  public int pawnStatus()
+  public void pawnStatus(int pawnIndex,int diceResult)
   {
-    return 0;
+    /*int askIndex = -1;
+    do {
+
+
+    } while (!movePawn(pawnIndex,diceResult));*/
   }
 
   /***************************************************/
@@ -62,11 +66,8 @@ public class Player {
     int diceResult = rollDice();
 
     //Vérifier si c'est possible
-    //Si possible alors appeler les 2 méthodes
-    int pawnIndex = pawnStatus();
-    movePawn(pawnIndex, diceResult);
-
-
+    //Si possible alors appeler pawnStatus
+    pawnStatus(pawnIndex,diceResult);
 
   }
   /***************************************************/
@@ -80,14 +81,21 @@ public class Player {
 
   /***************************************************/
 
-  public void movePawn(int pawnIndex, int diceResult)
+  public boolean movePawn(int pawnIndex, int diceResult)
   {
-    if(diceResult == 6 && this.pawns.get(pawnIndex).getSquare() == -1) this.pawns.get(pawnIndex).getOut();
+    if(diceResult == 6 && this.pawns.get(pawnIndex).getSquare() == -1)
+    {
+      this.pawns.get(pawnIndex).getOut();
+      return true;
+    }
     else if (this.pawns.get(pawnIndex).canMove(diceResult))
     {
       this.pawns.get(pawnIndex).moveOnBoard(arrayPosition,diceResult);
       //Checker si un pion se fait bouffer
+      return true;
     }
+
+    return false;
   }
 
   /***************************************************/
