@@ -76,23 +76,6 @@ public class Pawn {
     else isOnSafeZone = false;
   }
 
-  /***************************************************/
-
-  private Image scaleImage(Image image,int w, int h)
-  {
-    Image scaled = image.getScaledInstance(w,h,Image.SCALE_SMOOTH);
-    return scaled;
-  }
-
-  /***************************************************/
-
-  public JLabel setAndScaleImage(String pawnPath)
-  {
-    this.pawnImage = new ImageIcon(pawnPath);
-    Image scaledPawn = scaleImage(pawnImage.getImage(),200,200);
-    JLabel pawn = new JLabel(new ImageIcon(scaledPawn));
-    return pawn;
-  }
 
 
 
