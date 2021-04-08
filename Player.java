@@ -52,7 +52,7 @@ public class Player {
 
   public int pawnStatus()
   {
-    return -1;
+    return 0;
   }
 
   /***************************************************/
@@ -66,7 +66,7 @@ public class Player {
     int pawnIndex = pawnStatus();
     movePawn(pawnIndex, diceResult);
 
-    //Sinon ne rien faire et passe au joueur suivant
+
 
   }
   /***************************************************/
