@@ -41,12 +41,6 @@ public class Player {
 
   public void setColor(Color c) {this.color = c;}
 
-  /***************************************************/
-
-  private boolean checkWin()
-  {
-    return false;
-  }
 
   /***************************************************/
 
