@@ -72,6 +72,27 @@ public class Player {
   }
 
   /***************************************************/
+  // si le pions est arrivée à "home", le compteur est is à jours.
+  public void updatePawnHome(){
+	  for(int i = 0; i<4; i++){
+		  if(pawns.get(i).getSquare() == 56 && pawns.get(i).getHome() == false){
+			  pawns.get(i).getHome() = true;
+			  this.pawnsHome += 1;
+			  break;
+		  }
+	  }
+  }
+
+// check si la partie est finis 
+  public boolean checkWin(){
+	  if(this.pawnsHome == 4){
+		  return true;
+	  }
+	  else{
+		  return false;
+	  }
+
+  }
 
   private void initializePositionMapping()
   {

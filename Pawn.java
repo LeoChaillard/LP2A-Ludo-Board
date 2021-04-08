@@ -15,6 +15,7 @@ public class Pawn {
   private Vector position;
   private boolean isOnSafeZone;
   private boolean formBlock;
+  private boolean home;
   private int square;
   private ImageIcon pawnImage;
 
@@ -25,9 +26,14 @@ public class Pawn {
     this.position = new Vector(-1,-1);
     this.isOnSafeZone = true;
     this.formBlock = false;
+    this.home = false;
   }
 
   //Methods
+  public void getSquare(){return this.square };
+  
+  public void getHome(){return this.home};
+
   public void getOut()
   {
     this.square = 0;
