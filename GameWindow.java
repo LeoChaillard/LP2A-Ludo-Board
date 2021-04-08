@@ -10,10 +10,10 @@ import javax.swing.JPanel;
 import javax.swing.JLabel;
 import java.awt.Image;
 
-
 public class GameWindow extends JFrame {
   //Attributes
   private ImageIcon frameIcon;
+  private static final long serialVersionUID = 1L;
 
   //Constructor
   public GameWindow()
@@ -31,6 +31,8 @@ public class GameWindow extends JFrame {
     this.setLocationRelativeTo(null);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+    GameBoard gb = new GameBoard();
+    this.add(gb);
   }
 
   /***************************************************/
