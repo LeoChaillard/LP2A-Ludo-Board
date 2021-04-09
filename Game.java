@@ -7,14 +7,25 @@
 import java.lang.*;
 import java.util.*;
 import javax.swing.JLabel;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JOptionPane;
 
-public class Game {
+
+public class Game implements ActionListener {
   //Attributes
   private List<Player> players;
   private Random randPlayer;
   private Random randColor;
   private GameWindow window;
-  private boolean running;
+  private int diceResult;
+  private int playerIndex;
+
+  private enum Actions {
+    ROLL,
+    PLAY,
+    MOVE
+  }
 
   //Constructor
   public Game()
@@ -23,10 +34,56 @@ public class Game {
     randColor = new Random();
     players = new ArrayList<Player>(4);
     window = new GameWindow();
-    running = false;
   }
 
   //Methods
+  public void actionPerformed(ActionEvent evt)
+  {
+    if (evt.getActionCommand() == Actions.ROLL.name())
+    {
+      this.window.getRoll().setEnabled(false);
+      this.window.getMove().setEnabled(true);
+      this.diceResult = this.players.get(playerIndex).rollDice();
+      this.window.setRollText(diceResult);
+      this.window.repaint();
+
+    }
+    else if (evt.getActionCommand() == Actions.MOVE.name())
+    {
+      displayPawnStatus(playerIndex);
+      if(this.players.get(playerIndex).canPlay(diceResult))
+      {
+        String result = (String)JOptionPane.showInputDialog(this.window,"Which pawn do want to move ?", "Move a pawn",JOptionPane.PLAIN_MESSAGE,null,null, "1,2,3 or 4");
+        if(result != null && result.length() > 0 && this.players.get(playerIndex).canMovePawn(Integer.valueOf(result)-1,diceResult)){
+          JOptionPane.showMessageDialog(this.window, "You moved pawn" + result);
+          this.players.get(playerIndex).movePawn(Integer.valueOf(result)-1,diceResult);
+          displayPawnStatus(playerIndex);
+          if(diceResult == 6) this.window.getRoll().setEnabled(true);
+          else this.window.getPlay().setEnabled(true);
+          this.window.getMove().setEnabled(false);
+
+        }else JOptionPane.showMessageDialog(this.window, "Wrong index!");
+      } else
+      {
+        JOptionPane.showMessageDialog(this.window, "You can't make any legal move :(");
+        this.window.getPlay().setEnabled(true);
+      }
+    }
+    else if (evt.getActionCommand() == Actions.PLAY.name())
+    {
+      this.window.getMove().setEnabled(false);
+      this.window.getPlay().setEnabled(false);
+      this.window.getRoll().setEnabled(true);
+      if(playerIndex == 3) playerIndex = 0;
+      else playerIndex++;
+
+      displayPawnStatus(playerIndex);
+      displayCurrentPlayer(playerIndex);
+    }
+  }
+
+  /***************************************************/
+
   private int whoStarts()
   {
     int max = 0;
@@ -99,10 +156,29 @@ public class Game {
 
   private void setUpPlayers()
   {
-    this.players.add(new Player("Joueur1"));
-    this.players.add(new Player("Joueur2"));
-    this.players.add(new Player("Joueur3"));
-    this.players.add(new Player("Joueur4"));
+    this.players.add(new Player("Player1"));
+    this.players.add(new Player("Player2"));
+    this.players.add(new Player("Player3"));
+    this.players.add(new Player("Player4"));
+  }
+
+  /***************************************************/
+
+  private void displayCurrentPlayer(int playerIndex)
+  {
+    this.window.setPlaying(this.players.get(playerIndex).getName());
+    this.window.repaint();
+  }
+
+  /***************************************************/
+
+  private void displayPawnStatus(int playerIndex)
+  {
+    this.window.setPawn1(this.players.get(playerIndex).getPawns().get(0).getSquare());
+    this.window.setPawn2(this.players.get(playerIndex).getPawns().get(1).getSquare());
+    this.window.setPawn3(this.players.get(playerIndex).getPawns().get(2).getSquare());
+    this.window.setPawn4(this.players.get(playerIndex).getPawns().get(3).getSquare());
+    this.window.repaint();
   }
 
   /***************************************************/
@@ -111,10 +187,13 @@ public class Game {
   {
     setUpPlayers();
     assignPawnsColor();
+
     //Set up graphical interface
     this.window.initWindow();
+    this.window.getRoll().addActionListener(this); this.window.getPlay().addActionListener(this); this.window.getMove().addActionListener(this);
+    this.window.getPlay().setActionCommand(Actions.PLAY.name()); this.window.getRoll().setActionCommand(Actions.ROLL.name()); this.window.getMove().setActionCommand(Actions.MOVE.name());
     this.window.draw();
-    this.running = true;
+
   }
 
   /***************************************************/
@@ -123,18 +202,17 @@ public class Game {
   {
     setUpGame();
 
-    int playerIndex = whoStarts();
+    playerIndex = whoStarts();
 
-    while(running)
-    {
-      this.players.get(playerIndex).play();
-      if(this.players.get(playerIndex).checkWin()) running = false;
+      displayCurrentPlayer(playerIndex);
+      if(this.players.get(playerIndex).checkWin())
+      {
+        String result = (String)JOptionPane.showInputDialog(this.window,"Do you want to restart the game?", "End of game",JOptionPane.PLAIN_MESSAGE,null,null, "yes or no");
+        if(result.toLowerCase().equals("no")) System.exit(0);
+        else if (result.toLowerCase().equals("yes"))resetGame();
 
-      //Mettre à jour indice du Joueur
+      }
 
-
-      running = false; //En attendant pour eviter boucle infini
-    }
   }
 
   /***************************************************/

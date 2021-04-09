@@ -30,9 +30,17 @@ public class Pawn {
   }
 
   //Methods
-  public int getSquare(){return this.square };
-  
-  public boolean getHome(){return this.home};
+  public int getSquare(){return this.square; }
+
+  public void setSquare(int s){this.square = s; }
+
+  public void setHome(boolean h){this.home = h;}
+
+  public boolean getHome(){return this.home;}
+
+  public void setBlock(boolean b){this.formBlock = b;}
+
+  /***************************************************/
 
   public void getOut()
   {
@@ -42,22 +50,26 @@ public class Pawn {
 
   /***************************************************/
 
-  public void moveOnBoard(Map<Integer,Vector> coords,int resultDice)
+  public boolean canMoveOnBoard(int diceResult)
+  {
+    if ( (diceResult == 6 && square < 51 && square != -1)
+    || (diceResult == 5 && square < 52 && square != -1)
+    || (diceResult == 4 && square < 53 && square != -1)
+    || (diceResult == 3 && square < 54 && square != -1)
+    || (diceResult == 2 && square < 55 && square != -1)
+    || (diceResult == 1 && square < 56 && square != -1) ) return true;
+
+    return false;
+  }
+
+
+  /***************************************************/
+
+  public void moveOnBoard(Map<Integer,Vector> coords,int diceResult)
   {
 
-	 if (resultDice == 6 && square < 51) {this.position = coords.get(square+=6);}
-
-	 else if (resultDice == 5 && square < 52) {this.position = coords.get(square+=5);}
-
-	 else if (resultDice == 4 && square < 53) {this.position = coords.get(square+=4);}
-
-	 else if (resultDice == 3 && square < 54) {this.position = coords.get(square+=3);}
-
-	 else if (resultDice == 2 && square < 55) {this.position = coords.get(square+=2);}
-
-	 else if (resultDice == 1 && square < 56) {this.position = coords.get(square+=1);}
-
-   updateSafeZone();
+    this.position = coords.get(square+=diceResult);
+    updateSafeZone();
   }
 
 
@@ -76,23 +88,6 @@ public class Pawn {
     else isOnSafeZone = false;
   }
 
-  /***************************************************/
-
-  private Image scaleImage(Image image,int w, int h)
-  {
-    Image scaled = image.getScaledInstance(w,h,Image.SCALE_SMOOTH);
-    return scaled;
-  }
-
-  /***************************************************/
-
-  public JLabel setAndScaleImage(String pawnPath)
-  {
-    this.pawnImage = new ImageIcon(pawnPath);
-    Image scaledPawn = scaleImage(pawnImage.getImage(),200,200);
-    JLabel pawn = new JLabel(new ImageIcon(scaledPawn));
-    return pawn;
-  }
 
 
 

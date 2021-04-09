@@ -31,6 +31,10 @@ public class Player {
   }
 
   //Methods
+  public String getName(){return this.name;}
+
+  /***************************************************/
+
   public List<Pawn> getPawns(){return this.pawns;}
 
   /***************************************************/
@@ -41,35 +45,33 @@ public class Player {
 
   public void setColor(Color c) {this.color = c;}
 
-  /***************************************************/
-
-  public boolean checkWin()
-  {
-    return false;
-  }
 
   /***************************************************/
 
-  public void pawnStatus(int diceResult)
+  public void updateBlockPawn(int pawnIndex)
   {
-    /*int askIndex = -1;
-    do {
-
-
-    } while (!movePawn(askIndex,diceResult));*/
+   for(int i = 0; i<4; i++){
+     if(pawns.get(pawnIndex).getSquare() == pawns.get(i).getSquare() && pawnIndex != i )
+     {
+       pawns.get(pawnIndex).setBlock(true);
+       pawns.get(i).setBlock(true);
+     }
+    }
   }
+
 
   /***************************************************/
 
-  public void play()
+  public boolean canPlay(int diceResult)
   {
-    int diceResult = rollDice();
-
-    //Vérifier si c'est possible
-    //Si possible alors appeler pawnStatus
-    pawnStatus(diceResult);
-
+    boolean canPlay = false;
+    for(int i = 0;i<4;++i)
+    {
+      if(canMovePawn(i, diceResult)) canPlay = true;
+    }
+    return canPlay;
   }
+
   /***************************************************/
 
   public int rollDice()
@@ -81,45 +83,59 @@ public class Player {
 
   /***************************************************/
 
-  private boolean movePawn(int pawnIndex, int diceResult)
+  public boolean canMovePawn(int pawnIndex, int diceResult)
   {
-    if(diceResult == 6 && this.pawns.get(pawnIndex).getSquare() == -1)
-    {
-      this.pawns.get(pawnIndex).getOut();
-      return true;
-    }
-    else if (this.pawns.get(pawnIndex).canMove(diceResult))
-    {
-      this.pawns.get(pawnIndex).moveOnBoard(arrayPosition,diceResult);
-      //Checker si un pion se fait bouffer
-      return true;
-    }
+    if(diceResult == 6 && this.pawns.get(pawnIndex).getSquare() == -1) return true;
+    else if (this.pawns.get(pawnIndex).canMoveOnBoard(diceResult)) return true;
 
     return false;
   }
 
   /***************************************************/
-  // si le pions est arrivée à "home", le compteur est is à jours.
+
+  public void movePawn(int pawnIndex, int diceResult)
+  {
+    if(diceResult == 6 && this.pawns.get(pawnIndex).getSquare() == -1)
+    {
+      this.pawns.get(pawnIndex).getOut();
+    }
+    else if (this.pawns.get(pawnIndex).canMoveOnBoard(diceResult))
+    {
+      this.pawns.get(pawnIndex).moveOnBoard(arrayPosition,diceResult);
+      updateEatenPawn();
+      updateBlockPawn(pawnIndex);
+      updatePawnHome();
+    }
+
+  }
+
+  /***************************************************/
+
+  public void updateEatenPawn()
+  {
+
+  }
+
+  /***************************************************/
+
   public void updatePawnHome(){
 	  for(int i = 0; i<4; i++){
 		  if(pawns.get(i).getSquare() == 56 && pawns.get(i).getHome() == false){
-			  pawns.get(i).getHome() = true;
+			  pawns.get(i).setHome(true);
 			  this.pawnsHome += 1;
 			  break;
 		  }
 	  }
   }
 
-// check si la partie est finis 
-  public boolean checkWin(){
-	  if(this.pawnsHome == 4){
-		  return true;
-	  }
-	  else{
-		  return false;
-	  }
+/***************************************************/
 
+  public boolean checkWin()
+  {
+	  return this.pawnsHome == 4;
   }
+
+/***************************************************/
 
   private void initializePositionMapping()
   {
