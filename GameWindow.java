@@ -17,7 +17,6 @@ import java.awt.Color;
 public class GameWindow extends JFrame{
   //Attributes
   private ImageIcon frameIcon;
-  private static final long serialVersionUID = 1L;
   private JLabel playing;
   private JLabel pawn1, pawn2, pawn3, pawn4;
   private JLabel rolledText;
@@ -82,8 +81,6 @@ public class GameWindow extends JFrame{
   private JButton setDiceButton()
   {
     rollDice.setBounds(50,80,90,50);
-    //rollDice.setActionCommand(Actions.ROLL.name());
-    //rollDice.addActionListener(this);
     return rollDice;
   }
 
@@ -103,8 +100,6 @@ public class GameWindow extends JFrame{
   private JButton setPlayButton()
   {
     play.setBounds(400,80,120,50);
-    //play.setActionCommand(Actions.PLAY.name());
-    //play.addActionListener(this);
     play.setEnabled(false);
     return play;
   }
@@ -115,8 +110,6 @@ public class GameWindow extends JFrame{
   {
     movePawn.addActionListener(null);
     movePawn.setBounds(210,290,120,50);
-    //movePawn.setActionCommand(Actions.MOVE.name());
-    //movePawn.addActionListener(this);
     movePawn.setEnabled(false);
     return movePawn;
   }

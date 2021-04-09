@@ -80,6 +80,13 @@ public class Game implements ActionListener {
       displayPawnStatus(playerIndex);
       displayCurrentPlayer(playerIndex);
     }
+
+    if(this.players.get(playerIndex).checkWin())
+    {
+      String result = (String)JOptionPane.showInputDialog(this.window,"Do you want to restart the game?", "End of game",JOptionPane.PLAIN_MESSAGE,null,null, "yes or no");
+      if(result.toLowerCase().equals("no")) System.exit(0);
+      else if (result.toLowerCase().equals("yes"))resetGame();
+    }
   }
 
   /***************************************************/
@@ -201,25 +208,15 @@ public class Game implements ActionListener {
   public void runGame()
   {
     setUpGame();
-
     playerIndex = whoStarts();
-
-      displayCurrentPlayer(playerIndex);
-      if(this.players.get(playerIndex).checkWin())
-      {
-        String result = (String)JOptionPane.showInputDialog(this.window,"Do you want to restart the game?", "End of game",JOptionPane.PLAIN_MESSAGE,null,null, "yes or no");
-        if(result.toLowerCase().equals("no")) System.exit(0);
-        else if (result.toLowerCase().equals("yes"))resetGame();
-
-      }
-
+    displayCurrentPlayer(playerIndex);
   }
 
   /***************************************************/
 
   private void resetGame()
   {
-
+    runGame();
   }
 
 }

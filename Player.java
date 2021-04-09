@@ -136,6 +136,7 @@ public class Player {
   }
 
 /***************************************************/
+
 public void checkBlockPawn(int pawnIndex)
 {
    for(int i = 0; i<4; i++){
@@ -147,6 +148,8 @@ public void checkBlockPawn(int pawnIndex)
    }
 
  }
+
+/***************************************************/
 
   private void initializePositionMapping()
   {

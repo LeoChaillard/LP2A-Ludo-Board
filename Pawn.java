@@ -67,7 +67,6 @@ public class Pawn {
 
   public void moveOnBoard(Map<Integer,Vector> coords,int diceResult)
   {
-
     this.position = coords.get(square+=diceResult);
     updateSafeZone();
   }
