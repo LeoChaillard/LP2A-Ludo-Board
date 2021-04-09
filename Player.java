@@ -136,6 +136,17 @@ public class Player {
   }
 
 /***************************************************/
+public void checkBlockPawn(int pawnIndex)
+{
+   for(int i = 0; i<4; i++){
+     if(pawns.get(pawnIndex).getSquare() == pawns.get(i).getSquare() && pawnIndex != i )
+     {
+       pawns.get(pawnIndex).setBlock(true);
+       pawns.get(i).setBlock(true);
+     }
+   }
+
+ }
 
   private void initializePositionMapping()
   {
