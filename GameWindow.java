@@ -129,6 +129,7 @@ public class GameWindow extends JFrame{
     pawn1.setFont(font);
     pawn1.setBounds(200,135,300,30);
     if(square == -1) pawn1.setText("Pawn1 is at starting block");
+    else if (square == 56) pawn1.setText("Pawn1 is at home");
     else pawn1.setText("Pawn1 is at square " + square);
     this.add(pawn1);
   }
@@ -141,6 +142,7 @@ public class GameWindow extends JFrame{
     pawn2.setFont(font);
     pawn2.setBounds(200,175,300,30);
     if(square == -1) pawn2.setText("Pawn2 is at starting block");
+    else if (square == 56) pawn2.setText("Pawn2 is at home");
     else pawn2.setText("Pawn2 is at square " + square);
     this.add(pawn2);
   }
@@ -153,6 +155,7 @@ public class GameWindow extends JFrame{
     pawn3.setFont(font);
     pawn3.setBounds(200,215,300,30);
     if(square == -1) pawn3.setText("Pawn3 is at starting block");
+    else if (square == 56) pawn3.setText("Pawn3 is at home");
     else pawn3.setText("Pawn3 is at square " + square);
     this.add(pawn3);
   }
@@ -165,6 +168,7 @@ public class GameWindow extends JFrame{
     pawn4.setFont(font);
     pawn4.setBounds(200,255,300,30);
     if(square == -1) pawn4.setText("Pawn4 is at starting block");
+    else if (square == 56) pawn4.setText("Pawn4 is at home");
     else pawn4.setText("Pawn4 is at square " + square);
     this.add(pawn4);
   }
