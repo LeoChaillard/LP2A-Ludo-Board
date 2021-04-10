@@ -4,9 +4,6 @@
  * Creation date : April, 2021
  ************************************************************************/
 
-import java.lang.*;
-import java.util.*;
-
 public enum Color
 {
   BLUE,

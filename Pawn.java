@@ -6,9 +6,6 @@
 
 import java.lang.*;
 import java.util.*;
-import javax.swing.ImageIcon;
-import java.awt.Image;
-import javax.swing.JLabel;
 
 public class Pawn {
   //Attributes
@@ -17,7 +14,6 @@ public class Pawn {
   private boolean formBlock;
   private boolean home;
   private int square;
-  private ImageIcon pawnImage;
 
   //Constructor
   public Pawn()
@@ -30,15 +26,43 @@ public class Pawn {
   }
 
   //Methods
-  public int getSquare(){return this.square; }
+  public int getSquare(){return this.square;}
 
-  public void setSquare(int s){this.square = s; }
+  /***************************************************/
+
+  public void setSquare(int s){this.square = s;}
+
+  /***************************************************/
 
   public void setHome(boolean h){this.home = h;}
 
+  /***************************************************/
+
   public boolean getHome(){return this.home;}
 
+  /***************************************************/
+
   public void setBlock(boolean b){this.formBlock = b;}
+
+  /***************************************************/
+
+  public boolean getBlock(){return this.formBlock;}
+
+  /***************************************************/
+
+  public Vector getPosition(){return this.position;}
+
+  /***************************************************/
+
+  public boolean isOnSafeZone(){return isOnSafeZone;}
+
+  /***************************************************/
+
+  public void backStartingBlock()
+  {
+    this.square = -1;
+    this.position = new Vector(-1,-1);
+  }
 
   /***************************************************/
 
@@ -62,21 +86,12 @@ public class Pawn {
     return false;
   }
 
-
   /***************************************************/
 
   public void moveOnBoard(Map<Integer,Vector> coords,int diceResult)
   {
     this.position = coords.get(square+=diceResult);
     updateSafeZone();
-  }
-
-
-  /***************************************************/
-
-  public boolean isOnSafeZone()
-  {
-    return isOnSafeZone;
   }
 
   /***************************************************/
@@ -86,8 +101,6 @@ public class Pawn {
     if(square == 0 || square ==  8 || square == 21 || square == 34 || square == 47 || square >= 51 ) isOnSafeZone = true;
     else isOnSafeZone = false;
   }
-
-
 
 
 }

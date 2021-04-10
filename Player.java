@@ -7,7 +7,6 @@
 import java.lang.*;
 import java.util.*;
 
-
 public class Player {
   //Attributes
   private String name;
@@ -15,7 +14,8 @@ public class Player {
   private Random rand;
   private int pawnsHome;
   private List<Pawn> pawns = new ArrayList<Pawn>(4);
-  private Map<Integer,Vector> arrayPosition = new HashMap<Integer,Vector>();
+  private List<Integer> movablePawns = new ArrayList<Integer>(4);
+  private Map<Integer,Vector> mapPosition = new HashMap<Integer,Vector>();
 
   //Constructor
   public Player(String n)
@@ -24,13 +24,25 @@ public class Player {
     this.name = n;
     this.color = null;
     this.rand = new Random();
-    pawns.add(new Pawn());
-    pawns.add(new Pawn());
-    pawns.add(new Pawn());
-    pawns.add(new Pawn());
+    this.pawns.add(new Pawn());
+    this.pawns.add(new Pawn());
+    this.pawns.add(new Pawn());
+    this.pawns.add(new Pawn());
   }
 
   //Methods
+  public List<Integer> getMovablePawns(){return this.movablePawns;}
+
+  /***************************************************/
+
+  public Map<Integer,Vector> getMapPosition(){return this.mapPosition;}
+
+  /***************************************************/
+
+  public void setMap(Map<Integer,Vector> map){this.mapPosition = map;}
+
+  /***************************************************/
+
   public String getName(){return this.name;}
 
   /***************************************************/
@@ -39,26 +51,15 @@ public class Player {
 
   /***************************************************/
 
-  public Color getColor() {return this.color;}
+  public Color getColor(){return this.color;}
 
   /***************************************************/
 
-  public void setColor(Color c) {this.color = c;}
-
+  public void setColor(Color c){this.color = c;}
 
   /***************************************************/
 
-  public void updateBlockPawn(int pawnIndex)
-  {
-   for(int i = 0; i<4; i++){
-     if(pawns.get(pawnIndex).getSquare() == pawns.get(i).getSquare() && pawnIndex != i )
-     {
-       pawns.get(pawnIndex).setBlock(true);
-       pawns.get(i).setBlock(true);
-     }
-    }
-  }
-
+  public boolean checkWin(){return this.pawnsHome == 4;}
 
   /***************************************************/
 
@@ -67,7 +68,12 @@ public class Player {
     boolean canPlay = false;
     for(int i = 0;i<4;++i)
     {
-      if(canMovePawn(i, diceResult)) canPlay = true;
+      if(canMovePawn(i, diceResult))
+      {
+        canPlay = true;
+        if (!movablePawns.contains(i)) movablePawns.add(i);
+      } else if (movablePawns.contains(i)) movablePawns.remove(Integer.valueOf(i));
+
     }
     return canPlay;
   }
@@ -77,7 +83,7 @@ public class Player {
   public int rollDice()
   {
     int n = 0;
-    while( n <= 0) n = this.rand.nextInt(7);
+    while( n == 0) n = this.rand.nextInt(7);
     return n;
   }
 
@@ -87,7 +93,6 @@ public class Player {
   {
     if(diceResult == 6 && this.pawns.get(pawnIndex).getSquare() == -1) return true;
     else if (this.pawns.get(pawnIndex).canMoveOnBoard(diceResult)) return true;
-
     return false;
   }
 
@@ -95,25 +100,13 @@ public class Player {
 
   public void movePawn(int pawnIndex, int diceResult)
   {
-    if(diceResult == 6 && this.pawns.get(pawnIndex).getSquare() == -1)
-    {
-      this.pawns.get(pawnIndex).getOut();
-    }
+    if(diceResult == 6 && this.pawns.get(pawnIndex).getSquare() == -1) this.pawns.get(pawnIndex).getOut();
     else if (this.pawns.get(pawnIndex).canMoveOnBoard(diceResult))
     {
-      this.pawns.get(pawnIndex).moveOnBoard(arrayPosition,diceResult);
-      updateEatenPawn();
+      this.pawns.get(pawnIndex).moveOnBoard(mapPosition,diceResult);
       updateBlockPawn(pawnIndex);
       updatePawnHome();
     }
-
-  }
-
-  /***************************************************/
-
-  public void updateEatenPawn()
-  {
-
   }
 
   /***************************************************/
@@ -130,86 +123,19 @@ public class Player {
 
 /***************************************************/
 
-  public boolean checkWin()
-  {
-	  return this.pawnsHome == 4;
-  }
-
-/***************************************************/
-
-public void checkBlockPawn(int pawnIndex)
+public void updateBlockPawn(int pawnIndex)
 {
-   for(int i = 0; i<4; i++){
-     if(pawns.get(pawnIndex).getSquare() == pawns.get(i).getSquare() && pawnIndex != i )
-     {
-       pawns.get(pawnIndex).setBlock(true);
-       pawns.get(i).setBlock(true);
-     }
-   }
+  for(int j = 0;j<4;++j) pawns.get(j).setBlock(false);
 
- }
-
-/***************************************************/
-
-  private void initializePositionMapping()
+  for(int i = 0; i<4; i++)
   {
-  	arrayPosition.put(0,new Vector (6, 1));
-    arrayPosition.put(1,new Vector (6, 2));
-    arrayPosition.put(2,new Vector (6, 3));
-  	arrayPosition.put(3,new Vector (6, 4));
-  	arrayPosition.put(4,new Vector (6, 5));
-  	arrayPosition.put(5,new Vector (5, 6));
-  	arrayPosition.put(6,new Vector (4, 6));
-  	arrayPosition.put(7,new Vector (3, 6));
-  	arrayPosition.put(8,new Vector (2, 6));
-  	arrayPosition.put(9,new Vector (1, 6));
-  	arrayPosition.put(10,new Vector (0, 6));
-  	arrayPosition.put(11,new Vector (0, 7));
-  	arrayPosition.put(12,new Vector (0, 8));
-  	arrayPosition.put(13,new Vector (1, 8));
-  	arrayPosition.put(14,new Vector (2, 8));
-  	arrayPosition.put(15,new Vector (3, 8));
-  	arrayPosition.put(16,new Vector (4, 8));
-  	arrayPosition.put(17,new Vector (5, 8));
-  	arrayPosition.put(18,new Vector (6, 9));
-  	arrayPosition.put(19,new Vector (6, 10));
-  	arrayPosition.put(20,new Vector (6, 11));
-  	arrayPosition.put(21,new Vector (6, 12));
-  	arrayPosition.put(22,new Vector (6, 13));
-  	arrayPosition.put(23,new Vector (6, 14));
-  	arrayPosition.put(24,new Vector (7, 14));
-  	arrayPosition.put(25,new Vector (8, 14));
-  	arrayPosition.put(26,new Vector (8, 13));
-  	arrayPosition.put(27,new Vector (8, 12));
-  	arrayPosition.put(28,new Vector (8, 11));
-  	arrayPosition.put(29,new Vector (8, 10));
-  	arrayPosition.put(30,new Vector (8, 9));
-  	arrayPosition.put(31,new Vector (9, 8));
-  	arrayPosition.put(32,new Vector (10, 8));
-  	arrayPosition.put(33,new Vector (11, 8));
-  	arrayPosition.put(34,new Vector (12, 8));
-  	arrayPosition.put(35,new Vector (13, 8));
-  	arrayPosition.put(36,new Vector (14, 8));
-  	arrayPosition.put(37,new Vector (14, 7));
-  	arrayPosition.put(38,new Vector (14, 6));
-  	arrayPosition.put(39,new Vector (13, 6));
-  	arrayPosition.put(40,new Vector (12, 6));
-  	arrayPosition.put(41,new Vector (11, 6));
-  	arrayPosition.put(42,new Vector (10, 6));
-  	arrayPosition.put(43,new Vector (9, 6));
-  	arrayPosition.put(44,new Vector (8, 5));
-  	arrayPosition.put(45,new Vector (8, 4));
-  	arrayPosition.put(46,new Vector (8, 3));
-  	arrayPosition.put(47,new Vector (8, 2));
-  	arrayPosition.put(48,new Vector (8, 1));
-  	arrayPosition.put(49,new Vector (8, 0));
-  	arrayPosition.put(50,new Vector (7, 0));
-  	arrayPosition.put(51,new Vector (7, 1));
-  	arrayPosition.put(52,new Vector (7, 2));
-  	arrayPosition.put(53,new Vector (7, 3));
-  	arrayPosition.put(54,new Vector (7, 4));
-  	arrayPosition.put(55,new Vector (7, 5));
-  	arrayPosition.put(56,new Vector (7, 6));
+    if(pawns.get(pawnIndex).getSquare() == pawns.get(i).getSquare() && pawnIndex != i )
+    {
+      pawns.get(pawnIndex).setBlock(true);
+      pawns.get(i).setBlock(true);
+    }
+  }
 }
+
 
 }
