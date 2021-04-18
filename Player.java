@@ -82,8 +82,7 @@ public class Player {
 
   public int rollDice()
   {
-    int n = 0;
-    while( n == 0) n = this.rand.nextInt(7);
+    int n = 1 + this.rand.nextInt(6);
     return n;
   }
 

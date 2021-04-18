@@ -26,8 +26,7 @@ public class Game implements ActionListener {
 
   private enum Actions {
     ROLL,
-    PLAY,
-    MOVE
+    RESTART;
   }
 
   //Constructor
@@ -45,81 +44,40 @@ public class Game implements ActionListener {
     //Roll dice action
     if (evt.getActionCommand() == Actions.ROLL.name())
     {
-      this.window.getRoll().setEnabled(false);
-      this.window.getMove().setEnabled(true);
       this.diceResult = this.players.get(playerIndex).rollDice();
-      this.window.updateRollText(diceResult);
+      this.window.updateRollText(this.players.get(playerIndex).getName(),diceResult);
       this.window.repaint();
     }
 
-    //Move action
-    else if (evt.getActionCommand() == Actions.MOVE.name())
+    else if(evt.getActionCommand() == Actions.RESTART.name())
     {
-      this.displayPawnStatus(playerIndex);
-      if(this.players.get(playerIndex).canPlay(diceResult) && !movablePawnsBlocked())
-      {
-        String [] options = {"1", "2", "3", "4"};
-        int result = JOptionPane.showOptionDialog(this.window,"Which pawn do want to move ?","Move a pawn",JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-
-        if(result != -1 && this.players.get(playerIndex).canMovePawn(result,diceResult)){
-          JOptionPane.showMessageDialog(this.window, "You moved pawn" + (result+1));
-
-          this.players.get(playerIndex).movePawn(result,diceResult);
-          this.displayPawnStatus(playerIndex);
-          this.checkEatenPawns(this.players.get(playerIndex).getPawns().get(result).getPosition());
-
-          if(diceResult == 6) this.window.getRoll().setEnabled(true);
-          else this.window.getNextPlay().setEnabled(true);
-          this.window.getMove().setEnabled(false);
-        }
-        else JOptionPane.showMessageDialog(this.window, "Wrong index!");
-      }
-      else
-      {
-        JOptionPane.showMessageDialog(this.window, "You can't make any legal move :(");
-        this.window.getNextPlay().setEnabled(true);
-      }
+      resetGame();
     }
 
-    //Next player action
-    else if (evt.getActionCommand() == Actions.PLAY.name())
-    {
-      this.window.getMove().setEnabled(false);
-      this.window.getNextPlay().setEnabled(false);
-      this.window.getRoll().setEnabled(true);
-
-      if(playerIndex == 3) playerIndex = 0;
-      else playerIndex++;
-
-      displayPawnStatus(playerIndex);
-      displayCurrentPlayer(playerIndex);
-    }
+    playerIndex = (playerIndex + 1) % 4;
 
     if(this.players.get(playerIndex).checkWin())
     {
-      this.window.getMove().setEnabled(false);
-      this.window.getNextPlay().setEnabled(false);
-      this.window.getRoll().setEnabled(false);
 
       String [] options = {"yes", "no"};
       int result = JOptionPane.showOptionDialog(this.window,"Do you want to restart the game?","End of game",JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-
       if(result == 0) resetGame();
       else System.exit(0);
    }
   }
+
 
   /***************************************************/
 
   private void setUpGame()
   {
     setUpPlayers();
-    assignPawnsColor();
+    //assignPawnsColor();
 
     //Set up graphical interface
     this.window.initWindow();
-    this.window.getRoll().addActionListener(this); this.window.getNextPlay().addActionListener(this); this.window.getMove().addActionListener(this);
-    this.window.getNextPlay().setActionCommand(Actions.PLAY.name()); this.window.getRoll().setActionCommand(Actions.ROLL.name()); this.window.getMove().setActionCommand(Actions.MOVE.name());
+    this.window.getRoll().addActionListener(this); this.window.getRestart().addActionListener(this);
+    this.window.getRoll().setActionCommand(Actions.ROLL.name()); this.window.getRestart().setActionCommand(Actions.RESTART.name());
     this.window.draw();
 
   }
@@ -156,17 +114,6 @@ public class Game implements ActionListener {
   private void displayCurrentPlayer(int playerIndex)
   {
     this.window.updatePlaying(this.players.get(playerIndex).getName());
-    this.window.repaint();
-  }
-
-  /***************************************************/
-
-  private void displayPawnStatus(int playerIndex)
-  {
-    this.window.updatePawn1(this.players.get(playerIndex).getPawns().get(0).getSquare());
-    this.window.updatePawn2(this.players.get(playerIndex).getPawns().get(1).getSquare());
-    this.window.updatePawn3(this.players.get(playerIndex).getPawns().get(2).getSquare());
-    this.window.updatePawn4(this.players.get(playerIndex).getPawns().get(3).getSquare());
     this.window.repaint();
   }
 
@@ -217,7 +164,7 @@ public class Game implements ActionListener {
 
   /***************************************************/
 
-  public void assignPawnsColor()
+  /*public void assignPawnsColor()
   {
     Set<Integer> colorsSet = new HashSet<Integer>(4);
     Set<Integer> playerSet = new HashSet<Integer>(4);
@@ -238,7 +185,7 @@ public class Game implements ActionListener {
          }
       } else dispensed = true;
     }
-  }
+  }*/
 
   /***************************************************/
 

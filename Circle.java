@@ -4,10 +4,26 @@
  * Creation date : April, 2021
  ************************************************************************/
 
-public enum Color
-{
-  BLUE,
-  RED,
-  GREEN,
-  YELLOW;
-}
+import java.awt.Graphics;
+
+
+ public class Circle extends Shape{
+
+   //Methods
+   @Override
+   public void fill(Graphics g)
+   {
+     int width = getWidth();
+     int height = getHeight();
+
+     int x = getX();
+     int y = getY();
+
+     g.fillOval(x-width/2,y-height/2,width,height);
+   }
+
+
+
+
+
+ }
