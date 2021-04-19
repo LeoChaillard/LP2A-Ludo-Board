@@ -103,12 +103,8 @@ public class GameWindow extends JFrame{
 
 
     GameBoard gb = new GameBoard();
-
-
     this.getContentPane().add(rp,BorderLayout.EAST);
     this.getContentPane().add(gb,BorderLayout.CENTER);
-
-
   }
 
   /***************************************************/

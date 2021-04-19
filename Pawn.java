@@ -14,18 +14,28 @@ public class Pawn {
   private boolean formBlock;
   private boolean home;
   private int square;
+  private int squareMove;
+  private boolean isStarting;
+  private boolean moveHome;
 
   //Constructor
   public Pawn()
   {
-    this.square = -1;
+    this.square = 0;
+    this.squareMove = 0;
     this.position = new Vector(-1,-1);
     this.isOnSafeZone = true;
     this.formBlock = false;
     this.home = false;
+    this.isStarting = true;
+    this.moveHome = false;
   }
 
   //Methods
+  public boolean isStartingBlock(){return this.isStarting;}
+
+  /***************************************************/
+
   public int getSquare(){return this.square;}
 
   /***************************************************/
@@ -38,7 +48,7 @@ public class Pawn {
 
   /***************************************************/
 
-  public boolean getHome(){return this.home;}
+  public boolean isHome(){return this.home;}
 
   /***************************************************/
 
@@ -58,10 +68,19 @@ public class Pawn {
 
   /***************************************************/
 
+  public void setSquareMove(int move){this.squareMove = move;}
+
+  /***************************************************/
+
+  public int getSquareMove(){return this.squareMove;}
+
+  /***************************************************/
+
   public void backStartingBlock()
   {
     this.square = -1;
     this.position = new Vector(-1,-1);
+    this.isStarting = true;
   }
 
   /***************************************************/
@@ -70,6 +89,7 @@ public class Pawn {
   {
     this.square = 0;
     this.position = new Vector(6,1);
+    this.isStarting = false;
   }
 
   /***************************************************/

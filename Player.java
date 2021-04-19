@@ -10,7 +10,7 @@ import java.util.*;
 public class Player {
   //Attributes
   private String name;
-  private Color color;
+  //private Color color;
   private Random rand;
   private int pawnsHome;
   private List<Pawn> pawns = new ArrayList<Pawn>(4);
@@ -22,7 +22,7 @@ public class Player {
   {
     this.pawnsHome = 0;
     this.name = n;
-    this.color = null;
+    //this.color = null;
     this.rand = new Random();
     this.pawns.add(new Pawn());
     this.pawns.add(new Pawn());
@@ -51,11 +51,11 @@ public class Player {
 
   /***************************************************/
 
-  public Color getColor(){return this.color;}
+  //public Color getColor(){return this.color;}
 
   /***************************************************/
 
-  public void setColor(Color c){this.color = c;}
+  //public void setColor(Color c){this.color = c;}
 
   /***************************************************/
 
@@ -92,6 +92,7 @@ public class Player {
   {
     if(diceResult == 6 && this.pawns.get(pawnIndex).getSquare() == -1) return true;
     else if (this.pawns.get(pawnIndex).canMoveOnBoard(diceResult)) return true;
+    this.pawns.get(pawnIndex).setSquareMove(0);
     return false;
   }
 
@@ -103,7 +104,8 @@ public class Player {
     else if (this.pawns.get(pawnIndex).canMoveOnBoard(diceResult))
     {
       this.pawns.get(pawnIndex).moveOnBoard(mapPosition,diceResult);
-      updateBlockPawn(pawnIndex);
+      this.pawns.get(pawnIndex).setSquareMove(diceResult);
+      //updateBlockPawn(pawnIndex);
       updatePawnHome();
     }
   }
@@ -112,7 +114,7 @@ public class Player {
 
   public void updatePawnHome(){
 	  for(int i = 0; i<4; i++){
-		  if(pawns.get(i).getSquare() == 56 && pawns.get(i).getHome() == false){
+		  if(pawns.get(i).getSquare() == 56 && pawns.get(i).isHome() == false){
 			  pawns.get(i).setHome(true);
 			  this.pawnsHome += 1;
 			  break;

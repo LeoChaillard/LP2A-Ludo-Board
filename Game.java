@@ -11,13 +11,14 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
 
 
-
-public class Game implements ActionListener {
+public class Game implements ActionListener,MouseListener {
   //Attributes
-  private List<Player> players;
+  private static final List<Player> players = new ArrayList<Player>(4);
   private Random randPlayer;
   private Random randColor;
   private GameWindow window;
@@ -34,11 +35,43 @@ public class Game implements ActionListener {
   {
     randPlayer = new Random();
     randColor = new Random();
-    players = new ArrayList<Player>(4);
     window = new GameWindow();
   }
 
   //Methods
+  @Override
+  public void mouseReleased(MouseEvent evt)
+  {
+    playerIndex = (playerIndex + 1) % 4;
+
+    if(this.players.get(playerIndex).checkWin())
+    {
+
+      String [] options = {"yes", "no"};
+      int result = JOptionPane.showOptionDialog(this.window,"Do you want to restart the game?","End of game",JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+      if(result == 0) resetGame();
+      else System.exit(0);
+    }
+  }
+
+  /***************************************************/
+
+  @Override
+  public void mouseClicked(MouseEvent evt)
+  {
+
+
+  }
+
+  /***************************************************/
+
+  public void mousePressed(MouseEvent evt){}
+  public void mouseEntered(MouseEvent evt){}
+  public void mouseExited(MouseEvent evt){}
+
+
+  /***************************************************/
+
   public void actionPerformed(ActionEvent evt)
   {
     //Roll dice action
@@ -51,24 +84,21 @@ public class Game implements ActionListener {
 
     else if(evt.getActionCommand() == Actions.RESTART.name())
     {
-      resetGame();
-    }
-
-    playerIndex = (playerIndex + 1) % 4;
-
-    if(this.players.get(playerIndex).checkWin())
-    {
-
       String [] options = {"yes", "no"};
       int result = JOptionPane.showOptionDialog(this.window,"Do you want to restart the game?","End of game",JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
       if(result == 0) resetGame();
       else System.exit(0);
-   }
+    }
+
   }
 
 
   /***************************************************/
 
+  public static List<Player> getPlayers(){return players;}
+
+
+  /***************************************************/
   private void setUpGame()
   {
     setUpPlayers();
@@ -76,8 +106,11 @@ public class Game implements ActionListener {
 
     //Set up graphical interface
     this.window.initWindow();
-    this.window.getRoll().addActionListener(this); this.window.getRestart().addActionListener(this);
-    this.window.getRoll().setActionCommand(Actions.ROLL.name()); this.window.getRestart().setActionCommand(Actions.RESTART.name());
+   this.window.getRoll().addActionListener(this);
+   this.window.getRestart().addActionListener(this);
+    this.window.getRoll().setActionCommand(Actions.ROLL.name());
+    this.window.getRestart().setActionCommand(Actions.RESTART.name());
+
     this.window.draw();
 
   }
@@ -99,7 +132,7 @@ public class Game implements ActionListener {
   {
     setUpGame();
     playerIndex = whoStarts();
-    displayCurrentPlayer(playerIndex);
+    //displayCurrentPlayer(playerIndex);
   }
 
   /***************************************************/
