@@ -201,9 +201,7 @@ public class GameBoard extends JPanel{
 
 
     }
-
-
-    //Toolkit.getDefaultToolkit().sync();
+    Toolkit.getDefaultToolkit().sync();
   }
 
 
