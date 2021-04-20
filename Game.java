@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
+import java.awt.Color;
 
 
 public class Game implements ActionListener,MouseListener {
@@ -24,6 +25,13 @@ public class Game implements ActionListener,MouseListener {
   private GameWindow window;
   private int diceResult;
   private int playerIndex;
+
+  public static final Color[] pawnColors = {
+          new Color(0x208000),
+          new Color(0xCC7A00),
+          new Color(0x001133),
+          new Color(0x990000)
+  };
 
   private enum Actions {
     ROLL,
@@ -36,30 +44,48 @@ public class Game implements ActionListener,MouseListener {
     randPlayer = new Random();
     randColor = new Random();
     window = new GameWindow();
+    this.diceResult = 0;
   }
 
   //Methods
   @Override
-  public void mouseReleased(MouseEvent evt)
-  {
-    playerIndex = (playerIndex + 1) % 4;
-
-    if(this.players.get(playerIndex).checkWin())
-    {
-
-      String [] options = {"yes", "no"};
-      int result = JOptionPane.showOptionDialog(this.window,"Do you want to restart the game?","End of game",JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-      if(result == 0) resetGame();
-      else System.exit(0);
-    }
-  }
+  public void mouseReleased(MouseEvent evt){}
 
   /***************************************************/
 
   @Override
   public void mouseClicked(MouseEvent evt)
   {
+    int x = evt.getX();
+    int y = evt.getY();
 
+    /*System.out.println(x);
+    System.out.println(this.players.get(playerIndex).getPawns().get(0).getX());*/
+
+    if(this.players.get(playerIndex).canPlay(this.diceResult))
+    {
+      for(int pawnIndex : this.players.get(playerIndex).getMovablePawns())
+      {
+        Pawn p = this.players.get(playerIndex).getPawns().get(pawnIndex);
+        if( (p.getX() - 11 <= x) && (p.getX() + 22 >= x)&& (p.getY() + 14 <= y)&& (p.getY() + 44 >= y) )
+        {
+          this.players.get(playerIndex).movePawn(pawnIndex,diceResult);
+          if(this.players.get(playerIndex).checkWin())
+          {
+            String [] options = {"yes", "no"};
+            int result = JOptionPane.showOptionDialog(this.window,"Do you want to restart the game?","End of game",JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+            if(result == 0) resetGame();
+            else System.exit(0);
+          }
+          if(diceResult != 6) playerIndex = (playerIndex + 1) % 4;
+          diceResult = 0;
+          this.window.getRoll().setEnabled(true);
+          break;
+        }
+      }
+    }
+
+  this.window.repaint();
 
   }
 
@@ -80,6 +106,12 @@ public class Game implements ActionListener,MouseListener {
       this.diceResult = this.players.get(playerIndex).rollDice();
       this.window.updateRollText(this.players.get(playerIndex).getName(),diceResult);
       this.window.repaint();
+      if(this.players.get(playerIndex).canPlay(diceResult)) this.window.getRoll().setEnabled(false);
+      else
+      {
+        playerIndex = (playerIndex + 1) % 4;
+        diceResult = 0;
+      }
     }
 
     else if(evt.getActionCommand() == Actions.RESTART.name())
@@ -110,7 +142,7 @@ public class Game implements ActionListener,MouseListener {
    this.window.getRestart().addActionListener(this);
     this.window.getRoll().setActionCommand(Actions.ROLL.name());
     this.window.getRestart().setActionCommand(Actions.RESTART.name());
-
+    this.window.addMouseListener(this);
     this.window.draw();
 
   }

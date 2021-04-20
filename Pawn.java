@@ -14,25 +14,47 @@ public class Pawn {
   private boolean formBlock;
   private boolean home;
   private int square;
-  private int squareMove;
   private boolean isStarting;
   private boolean moveHome;
+  private int xScreen;
+  private int yScreen;
 
   //Constructor
   public Pawn()
   {
-    this.square = 0;
-    this.squareMove = 0;
+    this.square = -1;
     this.position = new Vector(-1,-1);
     this.isOnSafeZone = true;
     this.formBlock = false;
     this.home = false;
     this.isStarting = true;
     this.moveHome = false;
+    this.xScreen = 0;
+    this.yScreen = 0;
   }
 
   //Methods
+  public void setY(int y){this.yScreen = y;}
+
+  /***************************************************/
+
+  public void setX(int x){this.xScreen = x;}
+
+  /***************************************************/
+
+  public int getY(){return this.yScreen;}
+
+  /***************************************************/
+
+  public int getX(){return this.xScreen;}
+
+  /***************************************************/
+
   public boolean isStartingBlock(){return this.isStarting;}
+
+  /***************************************************/
+
+  public void setStarting(boolean s){this.isStarting = s;}
 
   /***************************************************/
 
@@ -68,14 +90,6 @@ public class Pawn {
 
   /***************************************************/
 
-  public void setSquareMove(int move){this.squareMove = move;}
-
-  /***************************************************/
-
-  public int getSquareMove(){return this.squareMove;}
-
-  /***************************************************/
-
   public void backStartingBlock()
   {
     this.square = -1;
@@ -96,12 +110,15 @@ public class Pawn {
 
   public boolean canMoveOnBoard(int diceResult)
   {
-    if ( (diceResult == 6 && square < 51 && square != -1)
-    || (diceResult == 5 && square < 52 && square != -1)
-    || (diceResult == 4 && square < 53 && square != -1)
-    || (diceResult == 3 && square < 54 && square != -1)
-    || (diceResult == 2 && square < 55 && square != -1)
-    || (diceResult == 1 && square < 56 && square != -1) ) return true;
+    if(square != -1)
+    {
+      if ( (diceResult == 6 && square < 51)
+      || (diceResult == 5 && square < 52)
+      || (diceResult == 4 && square < 53)
+      || (diceResult == 3 && square < 54)
+      || (diceResult == 2 && square < 55)
+      || (diceResult == 1 && square < 56) ) return true;
+    }
 
     return false;
   }

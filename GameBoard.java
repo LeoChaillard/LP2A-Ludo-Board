@@ -13,7 +13,7 @@ import java.awt.Graphics2D;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.Polygon;
-
+import java.awt.event.MouseListener;
 import java.util.*;
 
 
@@ -77,6 +77,11 @@ public class GameBoard extends JPanel{
     cir.setDirection(d);
     cir.setScale(height/ELEMENTS);
 
+    //Pawns
+    DrawPawn pawn = new DrawPawn();
+    pawn.setDirection(d);
+    pawn.setScale(height/ELEMENTS);
+
     for(int i = 0;i<colors.length;++i)
     {
       //Drawing starting block
@@ -134,17 +139,16 @@ public class GameBoard extends JPanel{
 
     }
 
-    //Pawns
+    //Drawing pawns depending on their position
     List<Player> players = Game.getPlayers();
-    cir.setSide(0.70f);
+    pawn.setSide(0.70f);
     for (int direction = 0;direction<Direction.Orientation.values().length;++direction)
     {
-      d.setOrientation(Direction.Orientation.values()[direction]);
       g.setColor(pawnColors[direction]);
-
       int pawnIndex = 0;
       for(Pawn p : players.get(direction).getPawns())
       {
+        d.setOrientation(Direction.Orientation.values()[direction]);
         d.resetMove();
         if(p.isStartingBlock())
         {
@@ -155,11 +159,13 @@ public class GameBoard extends JPanel{
           if(pawnIndex < 2) d.up(1);
           else d.down(1);
         }
-        else if(p.getSquare() >= 50 && p.getSquareMove() != 0)
+        else if(p.getSquare() >= 50)
         {
-          d.up(57 - p.getSquare());
+          d.up(1);
+          d.up(56 - p.getSquare());
+          if(p.getSquare() == 56) p.setHome(true);
         }
-        else if(p.getSquare() < 50 && !p.isHome() && p.getSquareMove() != 0)
+        else if(p.getSquare() < 50 && !p.isStartingBlock())
         {
           d.up(6);
           d.right(1);
@@ -194,13 +200,16 @@ public class GameBoard extends JPanel{
           d.down(squares);
         }
 
+        pawn.fill(g);
+        p.setX(pawn.getX());
+        p.setY(pawn.getY());
 
-        cir.fill(g);
         ++pawnIndex;
       }
 
 
     }
+
     Toolkit.getDefaultToolkit().sync();
   }
 

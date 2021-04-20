@@ -3,14 +3,21 @@
  * Authors : Eléanore RENAUD - eleanore.renaud@utbm.fr and Léo CHAILLARD - leo.chaillard@utbm.fr
  * Creation date : April, 2021
  ************************************************************************/
-import java.awt.event.MouseListener;
 
-public class LudoGameProject {
+import java.awt.Graphics;
 
-  public static void main(String [] args)
-  {
-    Game game = new Game();
-    game.runGame();
-	}
 
-}
+ public class DrawPawn extends Circle{
+
+   //Methods
+   @Override
+   public void fill(Graphics g)
+   {
+     super.fill(g);
+   }
+
+
+
+
+
+ }

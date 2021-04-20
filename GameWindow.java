@@ -25,6 +25,7 @@ public class GameWindow extends JFrame{
   private JLabel playing;
   private JLabel rolledText;
   private RightPanel rp;
+  private GameBoard gb;
 
 
   private static final int WINDOW_HEIGHT = 800;
@@ -37,6 +38,7 @@ public class GameWindow extends JFrame{
     this.playing = new JLabel();
     this.rolledText = new JLabel();
     this.rp = new RightPanel(RIGHT_SIDE);
+    this.gb = new GameBoard();
   }
 
   //Methods
@@ -101,10 +103,9 @@ public class GameWindow extends JFrame{
     this.setLayout(new BorderLayout());
     this.setRollText();
 
-
-    GameBoard gb = new GameBoard();
     this.getContentPane().add(rp,BorderLayout.EAST);
     this.getContentPane().add(gb,BorderLayout.CENTER);
+
   }
 
   /***************************************************/
