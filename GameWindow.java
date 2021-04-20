@@ -60,35 +60,41 @@ public class GameWindow extends JFrame{
 
   private void setPlaying()
   {
-    Font font = new Font("Arial", Font.BOLD,18);
+    Font font = new Font("Arial", Font.BOLD,15);
     playing.setFont(font);
-    playing.setBounds(200,90,300,30);
+    playing.setBounds(860,423,120,50);
     this.add(playing);
   }
 
   /***************************************************/
 
-  public void updatePlaying(String name)
+  public void updatePlaying(String name,Color c)
   {
-    playing.setText(name + " is playing");
+    playing.setForeground(c);
+    playing.setText(name);
   }
 
   /***************************************************/
 
   private void setRollText()
   {
-    Font font = new Font("Arial", Font.BOLD,12);
+    Font font = new Font("Arial", Font.BOLD,18);
     rolledText.setFont(font);
-    rolledText.setBounds(50,120,90,50);
+    rolledText.setBounds(855,460,90,50);
     this.add(this.rolledText);
   }
 
   /***************************************************/
 
-  public void updateRollText(String name, int diceResult)
+  public void updateRollText(int diceResult,Color c)
   {
-    rolledText.setText(name + " rolled " + diceResult);
+    rolledText.setForeground(c);
+    rolledText.setText("" + diceResult);
   }
+
+  /***************************************************/
+
+  public RightPanel getRightPanel(){return this.rp;}
 
   /***************************************************/
 
@@ -102,6 +108,7 @@ public class GameWindow extends JFrame{
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.setLayout(new BorderLayout());
     this.setRollText();
+    this.setPlaying();
 
     this.getContentPane().add(rp,BorderLayout.EAST);
     this.getContentPane().add(gb,BorderLayout.CENTER);

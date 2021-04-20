@@ -146,7 +146,19 @@ public class GameBoard extends JPanel{
     {
       g.setColor(pawnColors[direction]);
       int pawnIndex = 0;
-      for(Pawn p : players.get(direction).getPawns())
+
+      //Looking for the player that has index "direction" color
+      int index = 0;
+      for(int i = 0;i<4;++i)
+      {
+        if (players.get(i).isSameColor(direction))
+        {
+          index = i;
+          break;
+        }
+      }
+
+      for(Pawn p : players.get(index).getPawns())
       {
         d.setOrientation(Direction.Orientation.values()[direction]);
         d.resetMove();
@@ -201,6 +213,7 @@ public class GameBoard extends JPanel{
         }
 
         pawn.fill(g);
+
         p.setX(pawn.getX());
         p.setY(pawn.getY());
 

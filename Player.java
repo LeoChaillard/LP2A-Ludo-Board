@@ -6,23 +6,31 @@
 
 import java.lang.*;
 import java.util.*;
+import java.awt.Color;
 
 public class Player {
   //Attributes
   private String name;
-  //private Color color;
+  private Color color;
   private Random rand;
   private int pawnsHome;
   private List<Pawn> pawns = new ArrayList<Pawn>(4);
   private List<Integer> movablePawns = new ArrayList<Integer>(4);
   private Map<Integer,Vector> mapPosition = new HashMap<Integer,Vector>();
 
+  public static final Color[] darkColors = {
+          new Color(0x9acd00),
+          new Color(0xffcd00),
+          new Color(0x2fcdcd),
+          new Color(0xff3000)
+  };
+
   //Constructor
   public Player(String n)
   {
     this.pawnsHome = 0;
     this.name = n;
-    //this.color = null;
+    this.color = null;
     this.rand = new Random();
     this.pawns.add(new Pawn());
     this.pawns.add(new Pawn());
@@ -31,6 +39,14 @@ public class Player {
   }
 
   //Methods
+  public boolean isSameColor(int color){return this.color.equals(darkColors[color]);}
+
+  /***************************************************/
+
+  public int getPawnsHome(){return this.pawnsHome;}
+
+  /***************************************************/
+
   public List<Integer> getMovablePawns(){return this.movablePawns;}
 
   /***************************************************/
@@ -51,11 +67,11 @@ public class Player {
 
   /***************************************************/
 
-  //public Color getColor(){return this.color;}
+  public Color getColor(){return this.color;}
 
   /***************************************************/
 
-  //public void setColor(Color c){this.color = c;}
+  public void setColor(Color c){this.color = c;}
 
   /***************************************************/
 
@@ -103,7 +119,7 @@ public class Player {
     else if (this.pawns.get(pawnIndex).canMoveOnBoard(diceResult))
     {
       this.pawns.get(pawnIndex).moveOnBoard(mapPosition,diceResult);
-      //updateBlockPawn(pawnIndex);
+      updateBlockPawn(pawnIndex);
       updatePawnHome();
     }
   }
@@ -127,7 +143,7 @@ public void updateBlockPawn(int pawnIndex)
 
   for(int i = 0; i<4; i++)
   {
-    if(pawns.get(pawnIndex).getSquare() == pawns.get(i).getSquare() && pawnIndex != i )
+    if(i != pawnIndex && pawns.get(pawnIndex).getSquare() == pawns.get(i).getSquare())
     {
       pawns.get(pawnIndex).setBlock(true);
       pawns.get(i).setBlock(true);

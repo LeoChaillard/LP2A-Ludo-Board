@@ -19,4 +19,14 @@ public class Vector {
     this.y = y;
   }
 
+  //Methods
+  public int getX(){return this.x;}
+
+  public int getY(){return this.y;}
+
+  public boolean compare(Vector v)
+  {
+    return ((this.x == v.getX()) && (this.y == v.getY()));
+  }
+
 }

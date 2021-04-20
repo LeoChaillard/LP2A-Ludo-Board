@@ -26,11 +26,11 @@ public class Game implements ActionListener,MouseListener {
   private int diceResult;
   private int playerIndex;
 
-  public static final Color[] pawnColors = {
-          new Color(0x208000),
-          new Color(0xCC7A00),
-          new Color(0x001133),
-          new Color(0x990000)
+  public static final Color[] darkColors = {
+          new Color(0x9acd00),
+          new Color(0xffcd00),
+          new Color(0x2fcdcd),
+          new Color(0xff3000)
   };
 
   private enum Actions {
@@ -59,17 +59,18 @@ public class Game implements ActionListener,MouseListener {
     int x = evt.getX();
     int y = evt.getY();
 
-    /*System.out.println(x);
-    System.out.println(this.players.get(playerIndex).getPawns().get(0).getX());*/
-
-    if(this.players.get(playerIndex).canPlay(this.diceResult))
+    if(this.players.get(playerIndex).canPlay(this.diceResult) && !movablePawnsBlocked())
     {
       for(int pawnIndex : this.players.get(playerIndex).getMovablePawns())
       {
         Pawn p = this.players.get(playerIndex).getPawns().get(pawnIndex);
+
         if( (p.getX() - 11 <= x) && (p.getX() + 22 >= x)&& (p.getY() + 14 <= y)&& (p.getY() + 44 >= y) )
         {
+
           this.players.get(playerIndex).movePawn(pawnIndex,diceResult);
+          this.checkEatenPawns(this.players.get(playerIndex).getMapPosition().get(p.getSquare()));
+          this.window.getRightPanel().updateInfos(this.players);
           if(this.players.get(playerIndex).checkWin())
           {
             String [] options = {"yes", "no"};
@@ -97,16 +98,18 @@ public class Game implements ActionListener,MouseListener {
 
 
   /***************************************************/
-
+  @Override
   public void actionPerformed(ActionEvent evt)
   {
     //Roll dice action
     if (evt.getActionCommand() == Actions.ROLL.name())
     {
       this.diceResult = this.players.get(playerIndex).rollDice();
-      this.window.updateRollText(this.players.get(playerIndex).getName(),diceResult);
+      this.window.updateRollText(diceResult,this.players.get(playerIndex).getColor());
+      this.window.updatePlaying(this.players.get(playerIndex).getName(),this.players.get(playerIndex).getColor());
+      this.window.getRightPanel().updateInfos(this.players);
       this.window.repaint();
-      if(this.players.get(playerIndex).canPlay(diceResult)) this.window.getRoll().setEnabled(false);
+      if(this.players.get(playerIndex).canPlay(diceResult) && !movablePawnsBlocked()) this.window.getRoll().setEnabled(false);
       else
       {
         playerIndex = (playerIndex + 1) % 4;
@@ -129,12 +132,11 @@ public class Game implements ActionListener,MouseListener {
 
   public static List<Player> getPlayers(){return players;}
 
-
   /***************************************************/
   private void setUpGame()
   {
     setUpPlayers();
-    //assignPawnsColor();
+    assignPawnsColor();
 
     //Set up graphical interface
     this.window.initWindow();
@@ -152,10 +154,10 @@ public class Game implements ActionListener,MouseListener {
   private void setUpPlayers()
   {
     for(int i = 0;i<4;++i) this.players.add(new Player("Player"+(i+1)));
-    this.players.get(0).setMap( (new FirstPlayerPositions()).getMap() );
+    this.players.get(0).setMap( (new FourthPlayerPositions()).getMap() );
     this.players.get(1).setMap( (new SecondPlayerPositions()).getMap() );
-    this.players.get(2).setMap( (new ThirdPlayerPositions()).getMap() );
-    this.players.get(3).setMap( (new FourthPlayerPositions()).getMap() );
+    this.players.get(2).setMap( (new FirstPlayerPositions()).getMap() );
+    this.players.get(3).setMap( (new ThirdPlayerPositions()).getMap() );
   }
 
   /***************************************************/
@@ -164,7 +166,6 @@ public class Game implements ActionListener,MouseListener {
   {
     setUpGame();
     playerIndex = whoStarts();
-    //displayCurrentPlayer(playerIndex);
   }
 
   /***************************************************/
@@ -172,14 +173,6 @@ public class Game implements ActionListener,MouseListener {
   private void resetGame()
   {
     runGame();
-  }
-
-  /***************************************************/
-
-  private void displayCurrentPlayer(int playerIndex)
-  {
-    this.window.updatePlaying(this.players.get(playerIndex).getName());
-    this.window.repaint();
   }
 
   /***************************************************/
@@ -229,13 +222,12 @@ public class Game implements ActionListener,MouseListener {
 
   /***************************************************/
 
-  /*public void assignPawnsColor()
+  public void assignPawnsColor()
   {
     Set<Integer> colorsSet = new HashSet<Integer>(4);
     Set<Integer> playerSet = new HashSet<Integer>(4);
-    Color [] arr = Color.values();
-    boolean dispensed = false;
 
+    boolean dispensed = false;
     while(!dispensed)
     {
       if(colorsSet.size() != 4)
@@ -244,13 +236,13 @@ public class Game implements ActionListener,MouseListener {
           int p = this.randPlayer.nextInt(4);
           if(!colorsSet.contains(c) && !playerSet.contains(p))
           {
-            this.players.get(p).setColor(arr[c]);
+            this.players.get(p).setColor(darkColors[c]);
             colorsSet.add(c);
             playerSet.add(p);
          }
       } else dispensed = true;
     }
-  }*/
+  }
 
   /***************************************************/
 
@@ -264,20 +256,23 @@ public class Game implements ActionListener,MouseListener {
       block = false;
       for(int i = 0;i<4;++i)
       {
-        for(int k = currentSquare+1;k<=finalSquare;++k)
+        if(i != playerIndex)
         {
-          for(int l = 0;l<4;++l)
+          for(int k = currentSquare+1;k<=finalSquare;++k)
           {
             Vector pos = this.players.get(playerIndex).getMapPosition().get(k);
-            if(this.players.get(i).getPawns().get(l).getBlock() && this.players.get(i).getPawns().get(l).getPosition() == pos)
+            for(int l = 0;l<4;++l)
             {
-              block = true;
-              break;
+              if(this.players.get(i).getPawns().get(l).getBlock() && this.players.get(i).getPawns().get(l).getPosition().compare(pos))
+              {
+                block = true;
+                break;
+              }
             }
+            if(block) break;
           }
           if(block) break;
         }
-        if(block) break;
       }
       if(!block) break;
     }
@@ -288,16 +283,18 @@ public class Game implements ActionListener,MouseListener {
 
   /***************************************************/
 
-  public void checkEatenPawns(Vector pos)
+  private void checkEatenPawns(Vector pos)
   {
     for(int i =0;i<4;++i)
     {
       for(int j =0;j<4;++j)
       {
-        if(i != playerIndex && this.players.get(i).getPawns().get(j).getPosition() == pos && !this.players.get(i).getPawns().get(j).isOnSafeZone())
+        if(this.players.get(i).getPawns().get(j).getSquare() != -1 && i != playerIndex)
         {
-          this.players.get(i).getPawns().get(j).backStartingBlock();
-          System.out.println("Pawns"+j + "player"+i+" got eaten");
+          if(this.players.get(i).getMapPosition().get(this.players.get(i).getPawns().get(j).getSquare()).compare(pos) && !this.players.get(i).getPawns().get(j).isOnSafeZone())
+          {
+            this.players.get(i).getPawns().get(j).backStartingBlock();
+          }
         }
 
       }
