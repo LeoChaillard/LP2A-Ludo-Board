@@ -137,6 +137,7 @@ public class Game implements ActionListener,MouseListener {
   {
     setUpPlayers();
     assignPawnsColor();
+    setUpMapping();
 
     //Set up graphical interface
     this.window.initWindow();
@@ -154,10 +155,19 @@ public class Game implements ActionListener,MouseListener {
   private void setUpPlayers()
   {
     for(int i = 0;i<4;++i) this.players.add(new Player("Player"+(i+1)));
-    this.players.get(0).setMap( (new FourthPlayerPositions()).getMap() );
-    this.players.get(1).setMap( (new SecondPlayerPositions()).getMap() );
-    this.players.get(2).setMap( (new FirstPlayerPositions()).getMap() );
-    this.players.get(3).setMap( (new ThirdPlayerPositions()).getMap() );
+  }
+
+  /***************************************************/
+
+  private void setUpMapping()
+  {
+    for(Player p : this.players)
+    {
+      if(p.getColor() == darkColors[0]) p.setMap( (new FourthPlayerPositions()).getMap() );
+      else if(p.getColor() == darkColors[1]) p.setMap( (new SecondPlayerPositions()).getMap() );
+      else if(p.getColor() == darkColors[2]) p.setMap( (new FirstPlayerPositions()).getMap() );
+      else p.setMap( (new ThirdPlayerPositions()).getMap() );
+    }
   }
 
   /***************************************************/
