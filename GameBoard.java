@@ -127,13 +127,27 @@ public class GameBoard extends JPanel{
       cir.fill(g);
       d.right(1);
       cir.fill(g);
-      for(int k = 0;k<BLOCK_LENGTH-1;++k)
+      d.down(1);
+      rec.fill(g);
+      for(int k = 0;k<BLOCK_LENGTH-2;++k)
       {
         d.down(1);
         cir.fill(g);
       }
       d.down(1);
-      for(int k = 0;k<BLOCK_LENGTH;++k)
+      for(int k = 0;k<4;++k)
+      {
+        d.right(1);
+        cir.fill(g);
+      }
+      //Safe zone
+      cir.setSide(0.30f);
+      g.setColor(Color.WHITE);
+      cir.fill(g);
+
+      g.setColor(darkColors[i]);
+      cir.setSide(ELEMENT_SIZE);
+      for(int k = 0;k<2;++k)
       {
         d.right(1);
         cir.fill(g);
