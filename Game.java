@@ -214,6 +214,7 @@ public class Game implements ActionListener,MouseListener {
     this.window.resetWindow();
     this.window.repaint();
     this.window.getRightPanel().updateInfos(this.players);
+    this.window.getRoll().setEnabled(true);
   }
 
   /***************************************************/
@@ -266,7 +267,6 @@ public class Game implements ActionListener,MouseListener {
   public void assignPawnsColor()
   {
     Set<Integer> colorsSet = new HashSet<Integer>(4);
-    Set<Integer> playerSet = new HashSet<Integer>(4);
 
     boolean dispensed = false;
     while(!dispensed)
@@ -274,12 +274,10 @@ public class Game implements ActionListener,MouseListener {
       if(colorsSet.size() != 4)
       {
           int c = this.randColor.nextInt(4);
-          int p = this.randPlayer.nextInt(4);
-          if(!colorsSet.contains(c) && !playerSet.contains(p))
+          if(!colorsSet.contains(c))
           {
-            this.players.get(p).setColor(darkColors[c]);
+            this.players.get(c).setColor(darkColors[c]);
             colorsSet.add(c);
-            playerSet.add(p);
          }
       } else dispensed = true;
     }
