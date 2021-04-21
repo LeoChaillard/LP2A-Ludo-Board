@@ -19,12 +19,14 @@ import java.awt.Color;
 
 public class Game implements ActionListener,MouseListener {
   //Attributes
-  private static final List<Player> players = new ArrayList<Player>(4);
+  private static List<Player> players = new ArrayList<Player>(4);
   private Random randPlayer;
   private Random randColor;
   private GameWindow window;
   private int diceResult;
   private int playerIndex;
+  private Menu menu;
+
 
   public static final Color[] darkColors = {
           new Color(0x9acd00),
@@ -35,7 +37,9 @@ public class Game implements ActionListener,MouseListener {
 
   private enum Actions {
     ROLL,
-    RESTART;
+    MENU,
+    NEWGAME,
+    RESUME
   }
 
   //Constructor
@@ -45,6 +49,7 @@ public class Game implements ActionListener,MouseListener {
     randColor = new Random();
     window = new GameWindow();
     this.diceResult = 0;
+    this.menu = new Menu();
   }
 
   //Methods
@@ -107,7 +112,7 @@ public class Game implements ActionListener,MouseListener {
       this.diceResult = this.players.get(playerIndex).rollDice();
       this.window.updateRollText(diceResult,this.players.get(playerIndex).getColor());
       this.window.updatePlaying(this.players.get(playerIndex).getName(),this.players.get(playerIndex).getColor());
-      this.window.getRightPanel().updateInfos(this.players);
+
       this.window.repaint();
       if(this.players.get(playerIndex).canPlay(diceResult) && !movablePawnsBlocked()) this.window.getRoll().setEnabled(false);
       else
@@ -116,13 +121,21 @@ public class Game implements ActionListener,MouseListener {
         diceResult = 0;
       }
     }
-
-    else if(evt.getActionCommand() == Actions.RESTART.name())
+    else if(evt.getActionCommand() == Actions.MENU.name())
     {
-      String [] options = {"yes", "no"};
-      int result = JOptionPane.showOptionDialog(this.window,"Do you want to restart the game?","End of game",JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-      if(result == 0) resetGame();
-      else System.exit(0);
+      this.menu.setVisible(true);
+      this.window.setEnabled(false);
+    }
+    else if (evt.getActionCommand() == Actions.RESUME.name())
+    {
+      this.menu.setVisible(false);
+      this.window.setEnabled(true);
+    }
+    else if (evt.getActionCommand() == Actions.NEWGAME.name())
+    {
+      resetGame();
+      this.menu.setVisible(false);
+      this.window.setEnabled(true);
     }
 
   }
@@ -139,17 +152,26 @@ public class Game implements ActionListener,MouseListener {
     assignPawnsColor();
     setUpMapping();
 
-    //Set up graphical interface
+  }
+
+  /***************************************************/
+
+  private void initWindow()
+  {
+    this.menu.initMenu();
     this.window.initWindow();
    this.window.getRoll().addActionListener(this);
-   this.window.getRestart().addActionListener(this);
+   this.window.getMenu().addActionListener(this);
+   this.menu.getResume().addActionListener(this);
+   this.menu.getNewGame().addActionListener(this);
+   this.menu.getResume().setActionCommand(Actions.RESUME.name());
+   this.menu.getNewGame().setActionCommand(Actions.NEWGAME.name());
     this.window.getRoll().setActionCommand(Actions.ROLL.name());
-    this.window.getRestart().setActionCommand(Actions.RESTART.name());
+    this.window.getMenu().setActionCommand(Actions.MENU.name());
     this.window.addMouseListener(this);
     this.window.draw();
 
   }
-
   /***************************************************/
 
   private void setUpPlayers()
@@ -175,14 +197,23 @@ public class Game implements ActionListener,MouseListener {
   public void runGame()
   {
     setUpGame();
+    initWindow();
     playerIndex = whoStarts();
+    this.window.getRightPanel().updateInfos(this.players);
   }
 
   /***************************************************/
 
   private void resetGame()
   {
-    runGame();
+    this.players = null;
+    this.players = new ArrayList<Player>(4);
+
+
+    setUpGame();
+    this.window.resetWindow();
+    this.window.repaint();
+    this.window.getRightPanel().updateInfos(this.players);
   }
 
   /***************************************************/

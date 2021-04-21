@@ -15,7 +15,7 @@ import java.awt.Toolkit;
 import java.awt.Polygon;
 import java.awt.event.MouseListener;
 import java.util.*;
-
+import javax.swing.ImageIcon;
 
 public class GameBoard extends JPanel{
   //Attributes
@@ -24,6 +24,7 @@ public class GameBoard extends JPanel{
   private static final float ELEMENT_SIZE = 0.85f;
   private static final float BLOCK_LENGTH = 6f;
   private static final int QUARTER = 13;
+  private ImageIcon back;
 
   public static final Color[] colors = {
             new Color(0xcfff39),
@@ -49,7 +50,7 @@ public class GameBoard extends JPanel{
   //Constructor
   public GameBoard()
   {
-
+    this.back = new ImageIcon("Icon.jpg");
   }
 
   //Methods
@@ -58,6 +59,7 @@ public class GameBoard extends JPanel{
   {
     super.paint(g);
     this.setBackground(Color.WHITE);
+
 
     float width = getWidth();
     float height = getHeight();

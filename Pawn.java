@@ -15,7 +15,6 @@ public class Pawn {
   private boolean home;
   private int square;
   private boolean isStarting;
-  private boolean moveHome;
   private int xScreen;
   private int yScreen;
 
@@ -28,7 +27,6 @@ public class Pawn {
     this.formBlock = false;
     this.home = false;
     this.isStarting = true;
-    this.moveHome = false;
     this.xScreen = 0;
     this.yScreen = 0;
   }
@@ -95,6 +93,7 @@ public class Pawn {
     this.square = -1;
     this.position = new Vector(-1,-1);
     this.isStarting = true;
+    this.isOnSafeZone = true;
   }
 
   /***************************************************/

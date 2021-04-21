@@ -42,11 +42,24 @@ public class GameWindow extends JFrame{
   }
 
   //Methods
+
+  public void resetWindow()
+  {
+    this.updateRollText(0,Color.WHITE);
+    this.updatePlaying("",Color.WHITE);
+  }
+
+  /***************************************************/
+
   public JButton getRoll(){return this.rp.getRoll();}
 
   /***************************************************/
 
   public JButton getRestart(){return this.rp.getRestart();}
+
+  /***************************************************/
+
+  public JButton getMenu(){return this.rp.getMenu();}
 
   /***************************************************/
 
@@ -62,7 +75,8 @@ public class GameWindow extends JFrame{
   {
     Font font = new Font("Arial", Font.BOLD,15);
     playing.setFont(font);
-    playing.setBounds(860,423,120,50);
+    playing.setBounds(860,347,120,50);
+    playing.setText("");
     this.add(playing);
   }
 
@@ -72,6 +86,7 @@ public class GameWindow extends JFrame{
   {
     playing.setForeground(c);
     playing.setText(name);
+
   }
 
   /***************************************************/
@@ -80,7 +95,8 @@ public class GameWindow extends JFrame{
   {
     Font font = new Font("Arial", Font.BOLD,18);
     rolledText.setFont(font);
-    rolledText.setBounds(855,460,90,50);
+    rolledText.setBounds(855,384,90,50);
+    rolledText.setText("");
     this.add(this.rolledText);
   }
 

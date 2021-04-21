@@ -39,6 +39,20 @@ public class Player {
   }
 
   //Methods
+  public void resetPlayer()
+  {
+    for(Pawn p : this.pawns)
+    {
+      p.backStartingBlock();
+      p.setHome(false);
+      p.setX(0);
+      p.setY(0);
+    }
+    this.pawnsHome = 0;
+  }
+
+  /***************************************************/
+
   public boolean isSameColor(int color){return this.color.equals(darkColors[color]);}
 
   /***************************************************/
