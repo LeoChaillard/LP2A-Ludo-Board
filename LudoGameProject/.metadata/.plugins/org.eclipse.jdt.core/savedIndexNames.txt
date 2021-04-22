@@ -1,3 +1,0 @@
-INDEX VERSION 1.131+D:\UTBM\cours utbm\semestre 3\LP2A\ProjetLudoGame\LP2A-Ludo-Board\LudoGameProject\.metadata\.plugins\org.eclipse.jdt.core
-2141028859.index
-989676568.index
