@@ -1,10 +1,9 @@
 /************************************************************************
- * LP2A Project - Spring semester 2021 - Creation of a Ludo Board game
+ * LP2A Project - Spring semester 2021 - Creation of a Ludo Game
  * Authors : Eléanore RENAUD - eleanore.renaud@utbm.fr and Léo CHAILLARD - leo.chaillard@utbm.fr
  * Creation date : April, 2021
  ************************************************************************/
 
-import java.lang.*;
 import java.util.*;
 
 import javax.swing.JLabel;
@@ -17,24 +16,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.Color;
 
-
+/**
+ * Class managing the game.
+ * It contains a list of Player objects,
+ * but also Menu and GameWindow objects.
+ */
 public class Game implements ActionListener,MouseListener {
   //Attributes
   private static List<Player> players = new ArrayList<Player>(4);
   private Random randPlayer;
   private Random randColor;
   private GameWindow window;
+  private Menu menu;
   private int diceResult;
   private int playerIndex;
-  private Menu menu;
-
-
-  public static final Color[] darkColors = {
-          new Color(0x9acd00),
-          new Color(0xffcd00),
-          new Color(0x2fcdcd),
-          new Color(0xff3000)
-  };
 
   private enum Actions {
     ROLL,
@@ -46,92 +41,87 @@ public class Game implements ActionListener,MouseListener {
   //Constructor
   public Game()
   {
-    randPlayer = new Random();
-    randColor = new Random();
-    window = new GameWindow();
-    this.diceResult = 0;
+    this.randPlayer = new Random();
+    this.randColor = new Random();
+    this.window = new GameWindow();
     this.menu = new Menu();
+    this.diceResult = 0;
   }
 
   //Methods
-  @Override
-  public void mouseReleased(MouseEvent evt){}
-
-  /***************************************************/
-
   @Override
   public void mouseClicked(MouseEvent evt)
   {
     int x = evt.getX();
     int y = evt.getY();
+    Player player = this.players.get(playerIndex);
 
-    if(this.players.get(playerIndex).canPlay(this.diceResult) && !movablePawnsBlocked())
+    if(player.canPlay(this.diceResult) && !movablePawnsBlocked()) //Player can play and there's at least one pawn that won't meet a block
     {
-      for(int pawnIndex : this.players.get(playerIndex).getMovablePawns())
+      for(int pawnIndex : player.getMovablePawns())
       {
-        Pawn p = this.players.get(playerIndex).getPawns().get(pawnIndex);
+        Pawn p = player.getPawns().get(pawnIndex);
 
-        if( (p.getX() - 11 <= x) && (p.getX() + 22 >= x)&& (p.getY() + 14 <= y)&& (p.getY() + 44 >= y) )
+        if( (p.getX() - 11 <= x) && (p.getX() + 22 >= x)&& (p.getY() + 14 <= y)&& (p.getY() + 44 >= y) ) //Checking coordinates of the clicked pawn (there's a certain offset)
         {
 
-          this.players.get(playerIndex).movePawn(pawnIndex,diceResult);
-          this.checkEatenPawns(this.players.get(playerIndex).getMapPosition().get(p.getSquare()));
-          this.window.getRightPanel().updateInfos(this.players);
-          if(this.players.get(playerIndex).checkWin())
-          {
-            String [] options = {"yes", "no"};
-            int result = JOptionPane.showOptionDialog(this.window,"Do you want to restart the game?","End of game",JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-            if(result == 0) resetGame();
-            else System.exit(0);
-          }
+          player.movePawn(pawnIndex,diceResult);
+          this.checkEatenPawns(player.getMapPosition().get(p.getSquare()));
+          this.window.getRightPanel().updateInfos(this.players,player.getColor(),player.getName(),this.diceResult);
+          this.window.getRoll().setEnabled(true);
+          this.checkWin();
+
           if(diceResult != 6) playerIndex = (playerIndex + 1) % 4;
           diceResult = 0;
-          this.window.getRoll().setEnabled(true);
+
           break;
         }
       }
     }
-
-  this.window.repaint();
-
+    this.window.repaint();
   }
 
   /***************************************************/
 
+  @Override
   public void mousePressed(MouseEvent evt){}
   public void mouseEntered(MouseEvent evt){}
   public void mouseExited(MouseEvent evt){}
-
+  public void mouseReleased(MouseEvent evt){}
 
   /***************************************************/
+
   @Override
   public void actionPerformed(ActionEvent evt)
   {
-    //Roll dice action
     if (evt.getActionCommand() == Actions.ROLL.name())
     {
-      this.diceResult = this.players.get(playerIndex).rollDice();
-      this.window.updateRollText(diceResult,this.players.get(playerIndex).getColor());
-      this.window.updatePlaying(this.players.get(playerIndex).getName(),this.players.get(playerIndex).getColor());
+      Player player = this.players.get(playerIndex);
 
+      this.diceResult = player.rollDice();
+      this.window.getRightPanel().updateInfos(this.players,player.getColor(),player.getName(),this.diceResult);
       this.window.repaint();
-      if(this.players.get(playerIndex).canPlay(diceResult) && !movablePawnsBlocked()) this.window.getRoll().setEnabled(false);
+
+      if(player.canPlay(diceResult) && !movablePawnsBlocked()) this.window.getRoll().setEnabled(false);
       else
       {
         playerIndex = (playerIndex + 1) % 4;
         diceResult = 0;
       }
     }
+
     else if(evt.getActionCommand() == Actions.MENU.name())
     {
       this.menu.setVisible(true);
       this.window.setVisible(false);
     }
+
     else if (evt.getActionCommand() == Actions.RESUME.name())
     {
       this.menu.setVisible(false);
       this.window.setVisible(true);
     }
+
     else if (evt.getActionCommand() == Actions.NEWGAME.name())
     {
       this.menu.setVisible(false);
@@ -141,35 +131,53 @@ public class Game implements ActionListener,MouseListener {
 
   }
 
-
   /***************************************************/
 
   public static List<Player> getPlayers(){return players;}
 
   /***************************************************/
+
+  private void checkWin()
+  {
+    if(this.players.get(playerIndex).checkWin())
+    {
+      String [] options = {"yes", "no"};
+      int result = JOptionPane.showOptionDialog(this.window,"Do you want to restart the game?","End of game",JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+      if(result == 0) resetGame();
+      else System.exit(0);
+    }
+  }
+
+  /***************************************************/
+
   private void setUpGame()
   {
     createPlayers();
     assignPawnsColor();
     setUpMapping();
-
   }
 
   /***************************************************/
 
   private void initWindow()
   {
+    //Initializing windows
     this.menu.initMenu();
     this.window.initWindow();
-   this.window.getRoll().addActionListener(this);
-   this.window.getMenu().addActionListener(this);
-   this.menu.getResume().addActionListener(this);
-   this.menu.getNewGame().addActionListener(this);
-   this.menu.getResume().setActionCommand(Actions.RESUME.name());
-   this.menu.getNewGame().setActionCommand(Actions.NEWGAME.name());
+
+    //Adding action listeners
+    this.window.getRoll().addActionListener(this);
+    this.window.getMenu().addActionListener(this);
+    this.menu.getResume().addActionListener(this);
+    this.menu.getNewGame().addActionListener(this);
+    this.window.addMouseListener(this);
+
+    //Setting action commands
+    this.menu.getResume().setActionCommand(Actions.RESUME.name());
+    this.menu.getNewGame().setActionCommand(Actions.NEWGAME.name());
     this.window.getRoll().setActionCommand(Actions.ROLL.name());
     this.window.getMenu().setActionCommand(Actions.MENU.name());
-    this.window.addMouseListener(this);
+
     this.window.draw();
 
   }
@@ -177,14 +185,15 @@ public class Game implements ActionListener,MouseListener {
 
   private void createPlayers()
   {
+    //Creating default players
     for(int i = 0;i<4;++i) this.players.add(new Player("Player" + (i+1)));
-
   }
 
   /***************************************************/
 
   private void setPlayerNames()
   {
+    //Asking for the player's name
     for(int i = 0;i<4;++i)
     {
       String name = JOptionPane.showInputDialog( "Player name:" );
@@ -196,11 +205,12 @@ public class Game implements ActionListener,MouseListener {
 
   private void setUpMapping()
   {
+    //Setting a map depending on the player's color (orientation)
     for(Player p : this.players)
     {
-      if(p.getColor() == darkColors[0]) p.setMap( (new FourthPlayerPositions()).getMap() );
-      else if(p.getColor() == darkColors[1]) p.setMap( (new SecondPlayerPositions()).getMap() );
-      else if(p.getColor() == darkColors[2]) p.setMap( (new FirstPlayerPositions()).getMap() );
+      if(p.getColor() == Colors.getDarkColors()[0]) p.setMap( (new FourthPlayerPositions()).getMap() );
+      else if(p.getColor() == Colors.getDarkColors()[1]) p.setMap( (new SecondPlayerPositions()).getMap() );
+      else if(p.getColor() == Colors.getDarkColors()[2]) p.setMap( (new FirstPlayerPositions()).getMap() );
       else p.setMap( (new ThirdPlayerPositions()).getMap() );
     }
   }
@@ -214,7 +224,7 @@ public class Game implements ActionListener,MouseListener {
     playerIndex = whoStarts();
     setPlayerNames();
 
-    this.window.getRightPanel().updateInfos(this.players);
+    this.window.getRightPanel().updateInfos(this.players,this.players.get(playerIndex).getColor(),this.players.get(playerIndex).getName(),this.diceResult);
   }
 
   /***************************************************/
@@ -224,15 +234,13 @@ public class Game implements ActionListener,MouseListener {
     this.players = null;
     this.players = new ArrayList<Player>(4);
 
-
     setUpGame();
     playerIndex = whoStarts();
     setPlayerNames();
 
-    this.window.resetWindow();
-    this.window.repaint();
-    this.window.getRightPanel().updateInfos(this.players);
+    this.window.getRightPanel().updateInfos(this.players,this.players.get(playerIndex).getColor(),this.players.get(playerIndex).getName(),this.diceResult);
     this.window.getRoll().setEnabled(true);
+    this.window.repaint();
   }
 
   /***************************************************/
@@ -243,7 +251,7 @@ public class Game implements ActionListener,MouseListener {
     List<Player> rolledSame = new ArrayList<Player>();
     int iPlayFirst = -1;
 
-    //Letting each player roll the dice once
+    //Rolling the dice once for each player
     for (int i = 0;i<4;++i)
     {
       int tmp = players.get(i).rollDice();
@@ -284,21 +292,8 @@ public class Game implements ActionListener,MouseListener {
 
   public void assignPawnsColor()
   {
-    Set<Integer> colorsSet = new HashSet<Integer>(4);
-
-    boolean dispensed = false;
-    while(!dispensed)
-    {
-      if(colorsSet.size() != 4)
-      {
-          int c = this.randColor.nextInt(4);
-          if(!colorsSet.contains(c))
-          {
-            this.players.get(c).setColor(darkColors[c]);
-            colorsSet.add(c);
-         }
-      } else dispensed = true;
-    }
+    for(int i = 0;i<4;++i)
+      this.players.get(i).setColor(Colors.getDarkColors()[i]);
   }
 
   /***************************************************/
@@ -306,7 +301,7 @@ public class Game implements ActionListener,MouseListener {
   private boolean movablePawnsBlocked()
   {
     boolean block = false;
-    for(int j : this.players.get(playerIndex).getMovablePawns())
+    for(int j : this.players.get(playerIndex).getMovablePawns()) //Checking if there's a block on the way of movable pawns
     {
       int currentSquare = this.players.get(playerIndex).getPawns().get(j).getSquare();
       int finalSquare = currentSquare + diceResult;
@@ -331,7 +326,7 @@ public class Game implements ActionListener,MouseListener {
           if(block) break;
         }
       }
-      if(!block) break;
+      if(!block) break; //If there's no block for at least one pawn, we break
     }
 
 

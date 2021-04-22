@@ -1,5 +1,5 @@
 /************************************************************************
- * LP2A Project - Spring semester 2021 - Creation of a Ludo Board game
+ * LP2A Project - Spring semester 2021 - Creation of a Ludo Game
  * Authors : Eléanore RENAUD - eleanore.renaud@utbm.fr and Léo CHAILLARD - leo.chaillard@utbm.fr
  * Creation date : April, 2021
  ************************************************************************/
@@ -7,13 +7,18 @@
 import java.awt.Graphics;
 import java.util.*;
 
+/**
+ * Base abstract class defining a shape that is
+ * meant to be drawn by the use of a Graphics object.
+ * It contains a Direction object that enables the user 
+ * to choose an orientation for the drawing.
+ */
  public abstract class Shape{
    //Attributes
    private float width;
    private float height;
    private float scale;
    private Direction dir;
-
 
    //Methods
    abstract void fill(Graphics g);
@@ -32,10 +37,7 @@ import java.util.*;
 
    /***************************************************/
 
-   public void setSide(float s)
-   {
-     this.setSize(s,s);
-   }
+   public void setSide(float s){this.setSize(s,s);}
 
    /***************************************************/
 
@@ -47,17 +49,14 @@ import java.util.*;
 
    /***************************************************/
 
-   public int getX() { return Math.round(this.dir.getX()); }
+   public int getX() {return Math.round(this.dir.getX()); }
 
    /***************************************************/
 
-   public int getY() { return Math.round(this.dir.getY()); }
+   public int getY() {return Math.round(this.dir.getY()); }
 
    /***************************************************/
 
    public void setScale(float s){this.scale = s;}
-
-
-
 
  }

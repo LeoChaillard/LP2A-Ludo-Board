@@ -1,22 +1,24 @@
 /************************************************************************
- * LP2A Project - Spring semester 2021 - Creation of a Ludo Board game
+ * LP2A Project - Spring semester 2021 - Creation of a Ludo Game
  * Authors : Eléanore RENAUD - eleanore.renaud@utbm.fr and Léo CHAILLARD - leo.chaillard@utbm.fr
  * Creation date : April, 2021
  ************************************************************************/
 
-import javax.swing.JPanel;
 import java.awt.Graphics;
-import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.Polygon;
-import java.awt.event.MouseListener;
-import java.util.*;
-import javax.swing.ImageIcon;
 
+import javax.swing.JPanel;
+
+import java.util.*;
+
+/**
+ * Class defining the board panel of our game.
+ * It is drawing the game board and the pawns
+ * based on their orientations and positions.
+ */
 public class GameBoard extends JPanel{
   //Attributes
   private static final long serialVersionUID = 1L;
@@ -24,33 +26,11 @@ public class GameBoard extends JPanel{
   private static final float ELEMENT_SIZE = 0.85f;
   private static final float BLOCK_LENGTH = 6f;
   private static final int QUARTER = 13;
-  private ImageIcon back;
-
-  public static final Color[] colors = {
-            new Color(0xcfff39),
-            new Color(0xffe783),
-            new Color(0x95e5e5),
-            new Color(0xff896a)
-    };
-
-    public static final Color[] darkColors = {
-            new Color(0x9acd00),
-            new Color(0xffcd00),
-            new Color(0x2fcdcd),
-            new Color(0xff3000)
-    };
-
-    public static final Color[] pawnColors = {
-            new Color(0x208000),
-            new Color(0xCC7A00),
-            new Color(0x001133),
-            new Color(0x990000)
-    };
 
   //Constructor
   public GameBoard()
   {
-    this.back = new ImageIcon("Icon.jpg");
+
   }
 
   //Methods
@@ -59,7 +39,6 @@ public class GameBoard extends JPanel{
   {
     super.paint(g);
     this.setBackground(Color.WHITE);
-
 
     float width = getWidth();
     float height = getHeight();
@@ -84,24 +63,30 @@ public class GameBoard extends JPanel{
     pawn.setDirection(d);
     pawn.setScale(height/ELEMENTS);
 
-    for(int i = 0;i<colors.length;++i)
+    //Drawing board
+    for(int i = 0;i<4;++i) //For each orientation we're drawing the same scheme
     {
       //Drawing starting block
       d.resetMove();
-      rec.setSide(BLOCK_LENGTH);
+
       ori = Direction.Orientation.values()[i];
       d.setOrientation(ori);
-      d.move((0.5f + 1 + BLOCK_LENGTH/2.f), -(0.5f + 1 + BLOCK_LENGTH/2.f));
-      g.setColor(darkColors[i]);
+      d.move((0.5f + 1 + BLOCK_LENGTH/2.f), -(0.5f + 1 + BLOCK_LENGTH/2.f)); //Going at the center of the starting block
+
+      g.setColor(Colors.getDarkColors()[i]);
+      rec.setSide(BLOCK_LENGTH);
       rec.fill(g);
-      g.setColor(colors[i]);
+
+      g.setColor(Colors.getColors()[i]);
       rec.setSide(BLOCK_LENGTH*0.90f);
       rec.fill(g);
 
       //Drawing middle triangle
       d.resetMove();
-      g.setColor(colors[i]);
+
+      g.setColor(Colors.getColors()[i]);
       Polygon p = new Polygon();
+
       p.addPoint(Math.round(d.getX()), Math.round(d.getY()));
       d.up(1.5f);
       d.left(1.5f);
@@ -112,6 +97,7 @@ public class GameBoard extends JPanel{
 
       //Drawing centered squares
       d.resetMove();
+
       rec.setSide(ELEMENT_SIZE);
       d.up(1);
       for(int j = 0;j<BLOCK_LENGTH-1;++j)
@@ -121,31 +107,36 @@ public class GameBoard extends JPanel{
       }
 
       //Drawing circles
-      g.setColor(darkColors[i]);
+      g.setColor(Colors.getDarkColors()[i]);
       cir.setSide(ELEMENT_SIZE);
+
       d.up(1);
       cir.fill(g);
       d.right(1);
       cir.fill(g);
       d.down(1);
       rec.fill(g);
+
       for(int k = 0;k<BLOCK_LENGTH-2;++k)
       {
         d.down(1);
         cir.fill(g);
       }
+
       d.down(1);
+
       for(int k = 0;k<4;++k)
       {
         d.right(1);
         cir.fill(g);
       }
+
       //Safe zone
       cir.setSide(0.30f);
       g.setColor(Color.WHITE);
       cir.fill(g);
 
-      g.setColor(darkColors[i]);
+      g.setColor(Colors.getDarkColors()[i]);
       cir.setSide(ELEMENT_SIZE);
       for(int k = 0;k<2;++k)
       {
@@ -155,12 +146,14 @@ public class GameBoard extends JPanel{
 
     }
 
-    //Drawing pawns depending on their position
+
+    //Drawing pawns BASED on their positions
     List<Player> players = Game.getPlayers();
     pawn.setSide(0.70f);
+
     for (int direction = 0;direction<Direction.Orientation.values().length;++direction)
     {
-      g.setColor(pawnColors[direction]);
+      g.setColor(Colors.getPawnColors()[direction]);
       int pawnIndex = 0;
 
       //Looking for the player that has index "direction" color
@@ -176,37 +169,39 @@ public class GameBoard extends JPanel{
 
       for(Pawn p : players.get(index).getPawns())
       {
-        d.setOrientation(Direction.Orientation.values()[direction]);
+        d.setOrientation(Direction.Orientation.values()[direction]); //Getting the orientation of the player's starting block
         d.resetMove();
-        if(p.isStartingBlock())
+
+        if(p.isStartingBlock()) //If it is at starting block
         {
-          d.move((0.5f + 1 + BLOCK_LENGTH/2.f), -(0.5f + 1 + BLOCK_LENGTH/2.f));
-          if(pawnIndex % 2 == 0) d.left(1);
-          else d.right(1);
+          d.move((0.5f + 1 + BLOCK_LENGTH/2.f), -(0.5f + 1 + BLOCK_LENGTH/2.f)); //Going at the center of the starting block
+          if(pawnIndex % 2 == 0) d.left(1); //Even paws go left
+          else d.right(1); //Odd pawns go right
 
           if(pawnIndex < 2) d.up(1);
           else d.down(1);
         }
-        else if(p.getSquare() >= 50)
+        else if(p.getSquare() >= 50) //If it is on the straight line to go home
         {
           d.up(1);
           d.up(56 - p.getSquare());
           if(p.getSquare() == 56) p.setHome(true);
         }
-        else if(p.getSquare() < 50 && !p.isStartingBlock())
+        else if(p.getSquare() < 50 && !p.isStartingBlock()) //If it is moving on the board
         {
           d.up(6);
           d.right(1);
 
-          int tmp = Math.round(BLOCK_LENGTH)-2;
+
           int squares = p.getSquare();
 
           int i = direction;
-          while (squares > 12) {
+          while (squares > 12) { //Changing orientation for each travelled quarter
             d.setOrientation(Direction.Orientation.values()[(++i) % Direction.Orientation.values().length]);
             squares -= QUARTER;
           }
 
+          int tmp = Math.round(BLOCK_LENGTH)-2; //First line length from square 0
           while(squares > 0 && tmp > 0 )
           {
             d.down(1);
@@ -214,7 +209,7 @@ public class GameBoard extends JPanel{
             --squares;
           }
 
-          if(squares > 0)
+          if(squares > 0) //Second line
           {
             d.down(1);
             tmp = Math.round(BLOCK_LENGTH);
@@ -225,22 +220,19 @@ public class GameBoard extends JPanel{
               --squares;
             }
           }
-          d.down(squares);
+          d.down(squares); //Going down to next quarter
         }
 
-        pawn.fill(g);
+        pawn.fill(g); //Drawing pawn
 
+        //Getting pawn's position on screen
         p.setX(pawn.getX());
         p.setY(pawn.getY());
 
         ++pawnIndex;
       }
-
-
     }
-
     Toolkit.getDefaultToolkit().sync();
   }
-
 
 }

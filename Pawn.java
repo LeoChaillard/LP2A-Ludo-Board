@@ -1,12 +1,16 @@
 /************************************************************************
- * LP2A Project - Spring semester 2021 - Creation of a Ludo Board game
+ * LP2A Project - Spring semester 2021 - Creation of a Ludo Game
  * Authors : Eléanore RENAUD - eleanore.renaud@utbm.fr and Léo CHAILLARD - leo.chaillard@utbm.fr
  * Creation date : April, 2021
  ************************************************************************/
 
-import java.lang.*;
 import java.util.*;
 
+/**
+ * Class defining a pawn and its actions.
+ * It contains a vector object in order to keep track
+ * of its position relatively to other pawns.
+ */
 public class Pawn {
   //Attributes
   private Vector position;
@@ -15,8 +19,8 @@ public class Pawn {
   private boolean home;
   private int square;
   private boolean isStarting;
-  private int xScreen;
-  private int yScreen;
+  private int xScreen; //Pawn's x position on screen
+  private int yScreen; //Pawn's y position on screen
 
   //Constructor
   public Pawn()
@@ -109,7 +113,7 @@ public class Pawn {
 
   public boolean canMoveOnBoard(int diceResult)
   {
-    if(square != -1)
+    if(square != -1) //If it's not at starting block
     {
       if ( (diceResult == 6 && square < 51)
       || (diceResult == 5 && square < 52)

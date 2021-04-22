@@ -1,30 +1,25 @@
 /************************************************************************
- * LP2A Project - Spring semester 2021 - Creation of a Ludo Board game
+ * LP2A Project - Spring semester 2021 - Creation of a Ludo Game
  * Authors : Eléanore RENAUD - eleanore.renaud@utbm.fr and Léo CHAILLARD - leo.chaillard@utbm.fr
  * Creation date : April, 2021
  ************************************************************************/
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-
-
-import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.Image;
-import java.awt.Font;
-import java.awt.Color;
-import java.awt.EventQueue;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.Graphics;
 import javax.swing.SwingConstants;
 
+import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.Color;
+import java.awt.Graphics;
 
+/**
+ * Class defining the game's menu.
+ * It contains an ImagePanel object in order to
+ * draw the background image of the JFrame.
+ */
 public class Menu extends JFrame{
   //Attributes
   private static final int WINDOW_HEIGHT = 600;
@@ -54,6 +49,7 @@ public class Menu extends JFrame{
 
   public void initMenu()
   {
+    //Set up of the JFrame
     this.setTitle("Ludo Board");
     this.setIconImage(icon.getImage());
     this.setBounds(10,10,WINDOW_LENGTH,WINDOW_HEIGHT);
@@ -62,16 +58,16 @@ public class Menu extends JFrame{
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.setLayout(null);
 
+    //Buttons
     newGame.setBackground(Color.WHITE);
     newGame.setBounds(175,420,147,70);
     resume.setBackground(Color.WHITE);
     resume.setBounds(175,325,147,70);
 
+    //Adding components to the JFrame
     this.setContentPane(background);
     this.add(resume);
     this.add(newGame);
   }
-
-
 
 }

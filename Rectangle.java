@@ -1,11 +1,10 @@
 /************************************************************************
- * LP2A Project - Spring semester 2021 - Creation of a Ludo Board game
+ * LP2A Project - Spring semester 2021 - Creation of a Ludo Game
  * Authors : Eléanore RENAUD - eleanore.renaud@utbm.fr and Léo CHAILLARD - leo.chaillard@utbm.fr
  * Creation date : April, 2021
  ************************************************************************/
 
 import java.awt.Graphics;
-
 
  public class Rectangle extends Shape{
 
@@ -21,9 +20,4 @@ import java.awt.Graphics;
 
      g.fillRect(x-width/2,y-height/2,width,height);
    }
-
-
-
-
-
  }

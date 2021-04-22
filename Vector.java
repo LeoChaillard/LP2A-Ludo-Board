@@ -1,12 +1,12 @@
 /************************************************************************
- * LP2A Project - Spring semester 2021 - Creation of a Ludo Board game
+ * LP2A Project - Spring semester 2021 - Creation of a Ludo Game
  * Authors : Eléanore RENAUD - eleanore.renaud@utbm.fr and Léo CHAILLARD - leo.chaillard@utbm.fr
  * Creation date : April, 2021
  ************************************************************************/
 
-import java.lang.*;
-import java.util.*;
-
+ /**
+  * Class defining a 2D vector.
+  */
 public class Vector {
   //Attributes
   private int x;
@@ -22,7 +22,11 @@ public class Vector {
   //Methods
   public int getX(){return this.x;}
 
+  /***************************************************/
+
   public int getY(){return this.y;}
+
+  /***************************************************/
 
   public boolean compare(Vector v)
   {

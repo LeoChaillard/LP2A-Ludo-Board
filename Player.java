@@ -1,13 +1,18 @@
 /************************************************************************
- * LP2A Project - Spring semester 2021 - Creation of a Ludo Board game
+ * LP2A Project - Spring semester 2021 - Creation of a Ludo Game
  * Authors : Eléanore RENAUD - eleanore.renaud@utbm.fr and Léo CHAILLARD - leo.chaillard@utbm.fr
  * Creation date : April, 2021
  ************************************************************************/
 
-import java.lang.*;
 import java.util.*;
 import java.awt.Color;
 
+/**
+ * Class defining a player and his actions.
+ * It contains a list of 4 Pawn objects,
+ * and also a map between the board's positions (2D vectors)
+ * and the pawns' relative square position.
+ */
 public class Player {
   //Attributes
   private String name;
@@ -18,13 +23,6 @@ public class Player {
   private List<Integer> movablePawns = new ArrayList<Integer>(4);
   private Map<Integer,Vector> mapPosition = new HashMap<Integer,Vector>();
 
-  public static final Color[] darkColors = {
-          new Color(0x9acd00),
-          new Color(0xffcd00),
-          new Color(0x2fcdcd),
-          new Color(0xff3000)
-  };
-
   //Constructor
   public Player(String n)
   {
@@ -32,28 +30,11 @@ public class Player {
     this.name = n;
     this.color = null;
     this.rand = new Random();
-    this.pawns.add(new Pawn());
-    this.pawns.add(new Pawn());
-    this.pawns.add(new Pawn());
-    this.pawns.add(new Pawn());
+    this.pawns.add(new Pawn()); this.pawns.add(new Pawn()); this.pawns.add(new Pawn()); this.pawns.add(new Pawn());
   }
 
   //Methods
-  public void resetPlayer()
-  {
-    for(Pawn p : this.pawns)
-    {
-      p.backStartingBlock();
-      p.setHome(false);
-      p.setX(0);
-      p.setY(0);
-    }
-    this.pawnsHome = 0;
-  }
-
-  /***************************************************/
-
-  public boolean isSameColor(int color){return this.color.equals(darkColors[color]);}
+  public boolean isSameColor(int color){return this.color.equals(Colors.getDarkColors()[color]);}
 
   /***************************************************/
 
@@ -74,7 +55,7 @@ public class Player {
   /***************************************************/
 
   public void setName(String n){this.name = n;}
-  
+
   /***************************************************/
 
   public String getName(){return this.name;}
@@ -100,13 +81,13 @@ public class Player {
   public boolean canPlay(int diceResult)
   {
     boolean canPlay = false;
-    for(int i = 0;i<4;++i)
+    for(int i = 0;i<4;++i) //Checking if any pawn can move
     {
       if(canMovePawn(i, diceResult))
       {
         canPlay = true;
-        if (!movablePawns.contains(i)) movablePawns.add(i);
-      } else if (movablePawns.contains(i)) movablePawns.remove(Integer.valueOf(i));
+        if (!movablePawns.contains(i)) movablePawns.add(i); //Keeping track of movable pawns
+      } else if (movablePawns.contains(i)) movablePawns.remove(Integer.valueOf(i)); //If it's not a movable pawn anymore, remove it
 
     }
     return canPlay;
@@ -133,12 +114,12 @@ public class Player {
 
   public void movePawn(int pawnIndex, int diceResult)
   {
-    if(diceResult == 6 && this.pawns.get(pawnIndex).getSquare() == -1) this.pawns.get(pawnIndex).getOut();
+    if(diceResult == 6 && this.pawns.get(pawnIndex).getSquare() == -1) this.pawns.get(pawnIndex).getOut(); //Move out a pawn
     else if (this.pawns.get(pawnIndex).canMoveOnBoard(diceResult))
     {
-      this.pawns.get(pawnIndex).moveOnBoard(mapPosition,diceResult);
-      updateBlockPawn(pawnIndex);
-      updatePawnHome();
+      this.pawns.get(pawnIndex).moveOnBoard(mapPosition,diceResult); //Move a pawn on board
+      updateBlockPawn(pawnIndex); //Checking if it now forms a block
+      updatePawnHome(); //Cheking if it reached home
     }
   }
 
@@ -153,21 +134,20 @@ public class Player {
 	  }
   }
 
-/***************************************************/
+  /***************************************************/
 
-public void updateBlockPawn(int pawnIndex)
-{
-  for(int j = 0;j<4;++j) pawns.get(j).setBlock(false);
-
-  for(int i = 0; i<4; i++)
+  public void updateBlockPawn(int pawnIndex)
   {
-    if(i != pawnIndex && pawns.get(pawnIndex).getSquare() == pawns.get(i).getSquare())
+    for(int j = 0;j<4;++j) pawns.get(j).setBlock(false);
+
+    for(int i = 0; i<4; i++)
     {
-      pawns.get(pawnIndex).setBlock(true);
-      pawns.get(i).setBlock(true);
+      if(i != pawnIndex && pawns.get(pawnIndex).getSquare() == pawns.get(i).getSquare())
+      {
+        pawns.get(pawnIndex).setBlock(true);
+        pawns.get(i).setBlock(true);
+      }
     }
   }
-}
-
 
 }
