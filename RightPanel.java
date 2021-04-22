@@ -43,7 +43,7 @@ public class RightPanel extends JPanel{
     this.menu.setBackground(Color.WHITE);
 
 
-    this.gameInfos = new JLabel("<html>&emsp;&emsp;Game informations<br/><br/><br/>Playing : <br/><br/>Rolled :</html>");
+    this.gameInfos = new JLabel("<html>&emsp;&emsp;Game's informations<br/><br/><br/>Playing : <br/><br/>Rolled :</html>");
     Font font1 = new Font("Arial", Font.BOLD,16);
     this.gameInfos.setFont(font1);
     this.gameInfos.setForeground(Color.BLACK);

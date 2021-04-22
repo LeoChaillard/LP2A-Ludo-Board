@@ -9,6 +9,7 @@ import java.util.*;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JFrame;
 
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
@@ -124,18 +125,18 @@ public class Game implements ActionListener,MouseListener {
     else if(evt.getActionCommand() == Actions.MENU.name())
     {
       this.menu.setVisible(true);
-      this.window.setEnabled(false);
+      this.window.setVisible(false);
     }
     else if (evt.getActionCommand() == Actions.RESUME.name())
     {
       this.menu.setVisible(false);
-      this.window.setEnabled(true);
+      this.window.setVisible(true);
     }
     else if (evt.getActionCommand() == Actions.NEWGAME.name())
     {
-      resetGame();
       this.menu.setVisible(false);
-      this.window.setEnabled(true);
+      this.window.setVisible(true);
+     resetGame();
     }
 
   }
@@ -148,7 +149,7 @@ public class Game implements ActionListener,MouseListener {
   /***************************************************/
   private void setUpGame()
   {
-    setUpPlayers();
+    createPlayers();
     assignPawnsColor();
     setUpMapping();
 
@@ -174,9 +175,21 @@ public class Game implements ActionListener,MouseListener {
   }
   /***************************************************/
 
-  private void setUpPlayers()
+  private void createPlayers()
   {
-    for(int i = 0;i<4;++i) this.players.add(new Player("Player"+(i+1)));
+    for(int i = 0;i<4;++i) this.players.add(new Player("Player" + (i+1)));
+
+  }
+
+  /***************************************************/
+
+  private void setPlayerNames()
+  {
+    for(int i = 0;i<4;++i)
+    {
+      String name = JOptionPane.showInputDialog( "Player name:" );
+      if(name != null && !name.equals("")) this.players.get(i).setName(name);
+    }
   }
 
   /***************************************************/
@@ -199,6 +212,8 @@ public class Game implements ActionListener,MouseListener {
     setUpGame();
     initWindow();
     playerIndex = whoStarts();
+    setPlayerNames();
+
     this.window.getRightPanel().updateInfos(this.players);
   }
 
@@ -211,6 +226,9 @@ public class Game implements ActionListener,MouseListener {
 
 
     setUpGame();
+    playerIndex = whoStarts();
+    setPlayerNames();
+
     this.window.resetWindow();
     this.window.repaint();
     this.window.getRightPanel().updateInfos(this.players);
